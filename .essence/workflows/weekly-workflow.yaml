@@ -1,0 +1,227 @@
+name: "Weekly Workflow"
+type: workflow
+extends: base-command
+dependencies: [review-agent, goal-agent, task-agent, health-agent, capture-agent]
+tags: [productivity, weekly, review, planning, gtd]
+version: 1.0
+description: "Comprehensive weekly review and planning workflow"
+argument_hint: "[phase] [focus?]"
+context_required: [weekly-notes, goals, daily-summaries]
+
+purpose: "Comprehensive weekly review and planning system that synthesizes daily data, evaluates progress, optimizes systems, and sets strategic direction for the coming week."
+
+arguments:
+  - name: "phase"
+    type: "required"
+    description: "Workflow phase (review, analysis, planning, full)"
+    options: ["review", "analysis", "planning", "full"]
+  
+  - name: "focus"
+    type: "optional"
+    description: "Optional focus area"
+    options: ["productivity", "health", "goals", "systems"]
+
+context_requirements:
+  - "Past week's daily notes and data"
+  - "Weekly goals and objectives"
+  - "Monthly and quarterly goal context"
+  - "System performance metrics"
+  - "Calendar and schedule information"
+
+workflow_architecture:
+  full_workflow:
+    duration: "45-60 minutes"
+    sequence:
+      1: "data-collection → gather week's metrics and data"
+      2: "review-agent: comprehensive week analysis"
+      3: "goal-agent: progress assessment and adjustments"
+      4: "system-optimization: workflow and habit analysis"
+      5: "next-week-planning: strategic priorities and setup"
+      6: "celebration-and-learning: wins and insights capture"
+
+  quick_workflow:
+    duration: "20-30 minutes"
+    sequence:
+      1: "metrics-dashboard → key numbers and trends"
+      2: "wins-and-challenges → highlight analysis"
+      3: "goal-progress → critical objective updates"
+      4: "next-week-priorities → top 3-5 focus areas"
+      5: "system-adjustments → one key optimization"
+
+detailed_workflow_steps:
+  phase_1_data_collection:
+    name: "Data Collection and Preparation"
+    steps:
+      metrics_aggregation:
+        description: "Collect from daily notes"
+        data_points:
+          - "Task completion rates and patterns"
+          - "Health metrics (sleep, exercise, mood, energy)"
+          - "Time allocation across categories"
+          - "Habit consistency tracking"
+          - "Goal progress indicators"
+      
+      weekly_note_setup:
+        description: "Create weekly note structure"
+        file_path: "02-Weekly/{{date:YYYY-[W]WW}}.md"
+        template: "Templates/weekly_review_template.md"
+        context: "Week {{week-number}} of {{year}}"
+        period: "{{start-date}} to {{end-date}}"
+
+  phase_2_comprehensive_review:
+    name: "Comprehensive Review"
+    steps:
+      quantitative_analysis:
+        command: "/review weekly quantitative"
+        calculations:
+          - "Task completion rate: ___%"
+          - "Average daily productivity score: ___/10"
+          - "Health metrics averages"
+          - "Time distribution analysis"
+          - "Goal progress percentages"
+      
+      qualitative_reflection:
+        command: "/review weekly qualitative"
+        analysis_areas:
+          - "Major accomplishments and breakthroughs"
+          - "Significant challenges and obstacles"
+          - "Patterns and correlations discovered"
+          - "Emotional and energy trends"
+          - "System effectiveness assessment"
+
+  phase_3_goal_progress:
+    name: "Goal Progress Assessment"
+    steps:
+      goal_review:
+        command: "/goal weekly-progress"
+        per_goal_analysis:
+          - "Measure quantitative progress"
+          - "Assess strategy effectiveness"
+          - "Identify acceleration opportunities"
+          - "Note obstacles and solutions needed"
+          - "Adjust timelines if necessary"
+      
+      goal_alignment_check:
+        verifications:
+          - "Goals still align with values and priorities"
+          - "Resource allocation matches goal importance"
+          - "Progress rate sustainable and realistic"
+          - "Support systems adequate for achievement"
+
+  phase_4_system_optimization:
+    name: "System Optimization"
+    steps:
+      workflow_analysis:
+        review_areas:
+          - "Daily workflow completion rates"
+          - "Time investment vs value generation"
+          - "Bottlenecks and friction points"
+          - "Automation opportunities"
+          - "Tool and process improvements"
+      
+      habit_routine_assessment:
+        evaluation_criteria:
+          - "Consistency rates for each habit"
+          - "Environmental and trigger effectiveness"
+          - "Habit stacking and bundling success"
+          - "Reward system motivation levels"
+          - "Habit evolution and progression needs"
+
+  phase_5_strategic_planning:
+    name: "Strategic Planning"
+    steps:
+      next_week_theme_setting:
+        focus_areas:
+          - "Primary objective or theme"
+          - "Key result areas for attention"
+          - "Energy allocation strategy"
+          - "Major deadlines and commitments"
+          - "Growth or improvement focus"
+      
+      priority_architecture:
+        structure_elements:
+          - "3-5 high-impact priorities"
+          - "Time blocking for deep work"
+          - "Health and wellness commitments"
+          - "Relationship and social priorities"
+          - "Learning and development time"
+
+templates:
+  comprehensive_weekly_review:
+    template_file: "Templates/weekly_review_template.md"
+    sections:
+      - "Week metrics and productivity data"
+      - "Health and wellness statistics"
+      - "Reflection sections with insights"
+      - "Goal progress updates"
+      - "Next week planning sections"
+  
+  quick_weekly_dashboard:
+    format: "condensed"
+    key_metrics:
+      - "Task completion percentage with trend"
+      - "Exercise sessions vs target"
+      - "Average sleep hours"
+      - "Goals on track ratio"
+    
+    summary_sections:
+      - "Biggest win"
+      - "Main challenge"
+      - "Key insight"
+      - "Next week theme and priority"
+
+integration_patterns:
+  daily_to_weekly:
+    - "aggregate-daily-metrics → weekly-dashboard"
+    - "compile-daily-insights → pattern-recognition"
+    - "roll-up-task-data → productivity-analysis"
+    - "combine-health-logs → wellness-trends"
+  
+  goal_management:
+    - "weekly-progress → goal-timeline-updates"
+    - "obstacle-identification → strategy-adjustments"
+    - "resource-allocation → priority-rebalancing"
+    - "milestone-achievements → celebration-planning"
+  
+  monthly_quarterly:
+    - "weekly-patterns → monthly-trend-analysis"
+    - "system-optimizations → quarterly-strategy-updates"
+    - "goal-progress → annual-objective-alignment"
+    - "learning-insights → long-term-development-planning"
+
+advanced_features:
+  predictive_planning:
+    trend_analysis:
+      - "productivity-trajectories → workload-optimization"
+      - "energy-patterns → schedule-alignment"
+      - "goal-velocity → timeline-adjustments"
+      - "challenge-patterns → proactive-solution-preparation"
+  
+  automated_insights:
+    pattern_recognition:
+      - "correlate-sleep-productivity → optimize-rest-strategy"
+      - "analyze-task-estimation → improve-planning-accuracy"
+      - "identify-energy-drains → eliminate-or-minimize"
+      - "track-system-effectiveness → continuous-improvement"
+
+output_formats:
+  complete_review:
+    duration: "47 minutes"
+    summary_format: |
+      📊 Weekly Review Complete ({duration})
+      ✅ Productivity: {completion_rate}% task completion (↑{trend}% vs last week)
+      💪 Health: {workouts}/{target} workouts, {avg_sleep}hr avg sleep, mood trending {mood_trend}
+      🎯 Goals: {on_track}/{total} on track, {goal_highlight}
+      🔧 System win: {system_improvement}
+      🚀 Next week theme: "{theme}" - {priority_count} focused priorities set
+      💡 Key insight: {insight}
+  
+  analytics_summary:
+    format: |
+      📈 Weekly Trend Analysis
+      ⏱️ Time allocation: {deep_work}% deep work (↑{trend}%), {meetings}% meetings, {admin}% admin
+      🎯 Priority focus: {high_impact}% time on high-impact tasks (target: 80%)
+      💤 Sleep-productivity correlation: {correlation} ({strength})
+      🏃 Exercise consistency: {streak_status}
+      📊 System performance: Daily workflow completion {completion}%
+      🔮 Next week prediction: {prediction}

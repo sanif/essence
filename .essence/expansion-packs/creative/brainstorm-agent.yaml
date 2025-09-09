@@ -1,0 +1,398 @@
+name: "Brainstorm Agent"
+type: expansion
+extends: base-command
+dependencies: [capture-agent, context-manager]
+tags: [creative, brainstorming, ideation, innovation]
+version: 1.0
+description: "Creative brainstorming and ideation facilitation agent"
+argument_hint: "[topic] [method?] [constraints?]"
+context_required: [creative-goals, inspiration-sources, idea-history]
+
+purpose: "Facilitate creative brainstorming sessions using various ideation techniques, capture and organize ideas systematically, and help develop raw concepts into actionable insights or projects."
+
+arguments:
+  - name: "topic"
+    type: "required"
+    description: "Subject or challenge to brainstorm about"
+  
+  - name: "method"
+    type: "optional"
+    description: "Brainstorming technique to use"
+    options: ["mind-map", "scamper", "random-word", "6-thinking-hats", "brainwriting", "free-association"]
+  
+  - name: "constraints"
+    type: "optional"
+    description: "Creative constraints or focus areas"
+
+context_requirements:
+  - "Creative goals and current projects"
+  - "Inspiration sources and references"
+  - "Previous brainstorming sessions and outcomes"
+  - "Domain knowledge and expertise areas"
+
+core_capabilities:
+  brainstorming_methods:
+    mind_mapping:
+      description: "Visual exploration of ideas branching from central concept"
+      process:
+        - "Place central topic in center"
+        - "Create main branches for key themes"
+        - "Add sub-branches with detailed ideas"
+        - "Use colors, images, and symbols"
+        - "Connect related concepts across branches"
+      
+      template: |
+        # 🧠 Mind Map: {{topic}}
+        
+        ## Central Concept
+        **{{topic}}**
+        
+        ## Main Branches
+        ### {{branch_1}}
+        - {{idea_1_1}}
+        - {{idea_1_2}}
+        - {{idea_1_3}}
+        
+        ### {{branch_2}}
+        - {{idea_2_1}}
+        - {{idea_2_2}}
+        - {{idea_2_3}}
+        
+        ## Cross-Connections
+        {{cross_connections}}
+        
+        ## Visual Elements
+        {{visual_notes}}
+        
+        #brainstorm #mind-map #{{topic_tag}}
+    
+    scamper_technique:
+      description: "Systematic ideation using SCAMPER prompts"
+      prompts:
+        substitute: "What can be substituted?"
+        combine: "What can be combined?"
+        adapt: "What can be adapted?"
+        modify: "What can be modified or magnified?"
+        put_to_other_uses: "What other uses are possible?"
+        eliminate: "What can be eliminated?"
+        reverse: "What can be reversed or rearranged?"
+      
+      template: |
+        # 🔄 SCAMPER: {{topic}}
+        
+        ## Substitute
+        {{substitute_ideas}}
+        
+        ## Combine
+        {{combine_ideas}}
+        
+        ## Adapt
+        {{adapt_ideas}}
+        
+        ## Modify/Magnify
+        {{modify_ideas}}
+        
+        ## Put to Other Uses
+        {{other_uses_ideas}}
+        
+        ## Eliminate
+        {{eliminate_ideas}}
+        
+        ## Reverse/Rearrange
+        {{reverse_ideas}}
+        
+        ## Best Ideas
+        {{selected_ideas}}
+        
+        #brainstorm #scamper #{{topic_tag}}
+    
+    six_thinking_hats:
+      description: "Explore topic from six different perspectives"
+      hats:
+        white: "Facts and information"
+        red: "Emotions and feelings"
+        black: "Caution and critical thinking"
+        yellow: "Optimism and benefits"
+        green: "Creativity and alternatives"
+        blue: "Process and control"
+      
+      template: |
+        # 🎩 Six Thinking Hats: {{topic}}
+        
+        ## 🤍 White Hat (Facts)
+        {{white_hat_facts}}
+        
+        ## ❤️ Red Hat (Emotions)
+        {{red_hat_emotions}}
+        
+        ## 🖤 Black Hat (Caution)
+        {{black_hat_caution}}
+        
+        ## 💛 Yellow Hat (Benefits)
+        {{yellow_hat_benefits}}
+        
+        ## 💚 Green Hat (Creativity)
+        {{green_hat_creativity}}
+        
+        ## 💙 Blue Hat (Process)
+        {{blue_hat_process}}
+        
+        ## Synthesis
+        {{synthesis_insights}}
+        
+        #brainstorm #six-hats #{{topic_tag}}
+    
+    random_word_technique:
+      description: "Use random words to trigger unexpected connections"
+      process:
+        - "Select random word from list or generator"
+        - "Explore connections between word and topic"
+        - "Generate ideas inspired by the connection"
+        - "Repeat with multiple random words"
+      
+      word_categories:
+        - "Objects (tree, phone, mirror)"
+        - "Actions (jump, whisper, build)"
+        - "Concepts (freedom, growth, balance)"
+        - "Animals (dolphin, eagle, ant)"
+        - "Elements (fire, water, wind)"
+
+  idea_development:
+    idea_evaluation:
+      criteria:
+        feasibility: "How realistic is implementation?"
+        impact: "What's the potential effect?"
+        originality: "How unique is this idea?"
+        alignment: "Does it fit our goals?"
+        resources: "What would it require?"
+      
+      evaluation_matrix: |
+        | Idea | Feasibility | Impact | Originality | Alignment | Score |
+        |------|-------------|---------|-------------|-----------|-------|
+        | {{idea_1}} | {{f1}} | {{i1}} | {{o1}} | {{a1}} | {{s1}} |
+        | {{idea_2}} | {{f2}} | {{i2}} | {{o2}} | {{a2}} | {{s2}} |
+    
+    idea_clustering:
+      process:
+        - "Group related ideas together"
+        - "Identify common themes"
+        - "Find patterns and connections"
+        - "Create super-categories"
+      
+      clusters:
+        - "Similar solutions"
+        - "Related problems"
+        - "Common themes"
+        - "Sequential ideas"
+
+  creative_constraints:
+    productive_constraints:
+      time_limits: "15-minute idea sprints"
+      resource_constraints: "Using only available materials"
+      perspective_constraints: "From specific user viewpoint"
+      format_constraints: "Ideas must fit specific format"
+      
+    constraint_examples:
+      - "Solutions must cost under $100"
+      - "Ideas for people over 65"
+      - "Using only recycled materials"
+      - "Implementable in one week"
+      - "No technology solutions"
+
+brainstorming_templates:
+  creative_session:
+    format: |
+      # 💡 Brainstorm Session: {{topic}}
+      
+      **Date:** {{date}}
+      **Duration:** {{duration}}
+      **Method:** {{method}}
+      **Participants:** {{participants}}
+      
+      ## Challenge/Opportunity
+      {{challenge_description}}
+      
+      ## Constraints
+      {{constraints}}
+      
+      ## Warm-up Ideas
+      {{warmup_ideas}}
+      
+      ## Main Ideation
+      {{main_ideas}}
+      
+      ## Wild Ideas
+      {{wild_ideas}}
+      
+      ## Idea Evaluation
+      {{evaluation_results}}
+      
+      ## Selected Concepts
+      {{selected_concepts}}
+      
+      ## Next Steps
+      - [ ] {{next_step_1}}
+      - [ ] {{next_step_2}}
+      - [ ] {{next_step_3}}
+      
+      #brainstorm #{{method}} #{{topic_tag}}
+  
+  idea_development:
+    format: |
+      # 🌱 Idea Development: {{idea_name}}
+      
+      **Original Concept:** {{original_concept}}
+      **Source Session:** {{source_session}}
+      
+      ## Idea Description
+      {{detailed_description}}
+      
+      ## Potential Applications
+      {{applications}}
+      
+      ## Development Path
+      ### Phase 1: Research
+      - [ ] {{research_1}}
+      - [ ] {{research_2}}
+      
+      ### Phase 2: Prototype
+      - [ ] {{prototype_1}}
+      - [ ] {{prototype_2}}
+      
+      ### Phase 3: Test
+      - [ ] {{test_1}}
+      - [ ] {{test_2}}
+      
+      ## Resource Requirements
+      {{resources_needed}}
+      
+      ## Success Metrics
+      {{success_metrics}}
+      
+      #idea-development #{{idea_tag}}
+
+creative_techniques:
+  divergent_thinking:
+    techniques:
+      - "Generate many ideas quickly"
+      - "Suspend judgment during ideation"
+      - "Build on others' ideas"
+      - "Encourage wild ideas"
+      - "Go for quantity over quality initially"
+    
+    facilitation_tips:
+      - "Set energetic, positive tone"
+      - "Use visual aids and props"
+      - "Change physical positions"
+      - "Take breaks to prevent fatigue"
+  
+  convergent_thinking:
+    techniques:
+      - "Evaluate ideas against criteria"
+      - "Combine and improve ideas"
+      - "Prioritize based on impact/effort"
+      - "Develop most promising concepts"
+    
+    tools:
+      - "Dot voting for quick prioritization"
+      - "Impact/effort matrix"
+      - "Pros and cons analysis"
+      - "Feasibility assessment"
+
+inspiration_management:
+  inspiration_sources:
+    internal:
+      - "Personal experiences and challenges"
+      - "Dreams and subconscious insights"
+      - "Previous creative work"
+      - "Skills and knowledge areas"
+    
+    external:
+      - "Nature observations"
+      - "Art, music, literature"
+      - "Travel and new environments"
+      - "Conversations with diverse people"
+      - "Industry trends and innovations"
+  
+  inspiration_capture:
+    methods:
+      - "Voice memos during activities"
+      - "Visual inspiration boards"
+      - "Quote and insight collections"
+      - "Photo documentation"
+      - "Experience journaling"
+
+integration_patterns:
+  capture_agent:
+    - "Quickly capture ideas during sessions"
+    - "Organize ideas into structured formats"
+    - "Link ideas to projects and goals"
+    - "Build searchable idea database"
+  
+  task_agent:
+    - "Convert ideas into actionable tasks"
+    - "Schedule idea development time"
+    - "Create research and testing tasks"
+    - "Track idea implementation progress"
+  
+  project_management:
+    - "Transform ideas into project proposals"
+    - "Allocate resources for idea development"
+    - "Track idea-to-implementation pipeline"
+    - "Measure innovation success rates"
+
+idea_organization:
+  categorization:
+    by_domain:
+      - "Work and professional"
+      - "Personal life improvement"
+      - "Creative projects"
+      - "Problem solutions"
+      - "Innovation opportunities"
+    
+    by_development_stage:
+      - "Raw concepts"
+      - "Partially developed"
+      - "Research phase"
+      - "Prototyping"
+      - "Testing/validation"
+      - "Implementation ready"
+  
+  idea_lifecycle:
+    capture: "Initial idea documentation"
+    develop: "Research and expansion"
+    evaluate: "Feasibility and impact assessment"
+    prototype: "Create minimal viable version"
+    test: "Validate with users/market"
+    implement: "Full development and launch"
+    iterate: "Improve based on feedback"
+
+output_formats:
+  session_complete:
+    format: |
+      💡 Brainstorm Complete: {{topic}}
+      ⏱️ Duration: {{duration}} minutes
+      🧠 Method: {{method}}
+      💭 Ideas generated: {{total_ideas}}
+      ⭐ Top ideas: {{top_ideas_count}}
+      🎯 Next development: {{development_focus}}
+      📅 Follow-up: {{follow_up_date}}
+      
+  idea_summary:
+    format: |
+      🌟 Idea Summary: {{idea_name}}
+      📝 Description: {{brief_description}}
+      📊 Evaluation: {{evaluation_score}}/10
+      🎯 Potential impact: {{impact_assessment}}
+      🔧 Development effort: {{effort_estimate}}
+      📋 Next step: {{immediate_next_action}}
+      
+  creative_analytics:
+    format: |
+      📊 Creative Analytics - {{period}}
+      💡 Sessions: {{session_count}}
+      💭 Ideas generated: {{total_ideas}}
+      🌱 In development: {{ideas_in_development}}
+      ✅ Implemented: {{implemented_ideas}}
+      🏆 Success rate: {{success_rate}}%
+      🎯 Most productive method: {{best_method}}

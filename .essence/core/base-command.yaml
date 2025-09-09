@@ -1,0 +1,132 @@
+name: "Base Command Template"
+type: core
+version: 1.0
+description: "Reusable template for all Essence commands"
+extends: null
+
+metadata_structure:
+  required_fields:
+    - type: "agent|workflow|utility|expansion"
+    - extends: "base-command"
+    - version: "1.0"
+    - description: "Brief command description"
+  optional_fields:
+    - dependencies: "List of command names this depends on"
+    - tags: "List of category and domain tags"
+    - argument_hint: "Usage pattern like [arg1] [arg2] [optional-arg]"
+    - context_required: "List of contexts like daily-note, user-prefs, calendar"
+
+command_structure:
+  sections:
+    - name: "Purpose Section"
+      description: "Clear, concise description of what the command does"
+      required: true
+      
+    - name: "Arguments Section" 
+      description: "List of required and optional arguments with descriptions"
+      required: true
+      format:
+        - "arg1: Required argument description"
+        - "arg2: Optional argument description (optional)"
+        
+    - name: "Context Requirements"
+      description: "List what context/data the command needs"
+      required: true
+      examples:
+        - "Daily note access"
+        - "User preferences"
+        - "Calendar events"
+        - "Project information"
+        
+    - name: "Actions Section"
+      description: "Numbered list of steps the command performs"
+      required: true
+      format: "numbered_list"
+      
+    - name: "Output Section"
+      description: "Describe what the command returns/creates"
+      required: true
+      examples:
+        - "Files created or modified"
+        - "Data returned to user"
+        - "Side effects"
+        
+    - name: "Dependencies Section"
+      description: "Other commands this command calls or requires"
+      required: false
+
+reusable_patterns:
+  file_paths:
+    daily_notes: "01-Daily/{{date:YYYY-MM-DD}}.md"
+    weekly_notes: "02-Weekly/{{date:YYYY-[W]WW}}.md"
+    quick_capture: "10-Quick-Notes/{{timestamp}}.md"
+    
+  common_actions:
+    - name: "Create/Update Daily Note"
+      template: "Templates/daily_note_template.md"
+      
+    - name: "Add Task"
+      description: "Add task with tags and due dates"
+      
+    - name: "Create Reminder"
+      script: "./scripts/reminder.sh"
+      purpose: "Mac Reminders integration"
+      
+    - name: "Process Inbox"
+      template: "Templates/quick_capture_template.md"
+      action: "Move and organize captured notes"
+      
+    - name: "Create Goals"
+      template: "Templates/goal_template.md"
+      purpose: "Goal tracking"
+      
+    - name: "Create Project"
+      template: "Templates/project_template.md"
+      purpose: "Project planning and management"
+      
+    - name: "People Notes"
+      template: "Templates/people_template.md"
+      purpose: "Contact and relationship tracking"
+      
+    - name: "Decision Making"
+      template: "Templates/decision_template.md"
+      purpose: "Structured decision documentation"
+      
+    - name: "Meeting Notes"
+      template: "Templates/meeting_template.md"
+      purpose: "Structured meeting documentation"
+      
+    - name: "Health Logging"
+      template: "Templates/health_log_template.md"
+      purpose: "Comprehensive health tracking"
+      
+    - name: "Weekly Review"
+      template: "Templates/weekly_review_template.md"
+      purpose: "Structured weekly planning"
+
+standard_tags:
+  content_types:
+    - "task"
+    - "habit" 
+    - "goal"
+    - "health"
+    - "finance"
+  priorities:
+    - "work"
+    - "personal"
+    - "urgent"
+    - "someday"
+  projects:
+    format: "project/[project-name]"
+
+error_handling:
+  should_handle:
+    - "Missing files/directories"
+    - "Invalid arguments"
+    - "Script execution failures"
+    - "Permission issues"
+  best_practices:
+    - "Provide clear error messages"
+    - "Suggest corrective actions"
+    - "Fallback behaviors where possible"
+    - "Log errors appropriately"

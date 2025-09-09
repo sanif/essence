@@ -1,0 +1,374 @@
+name: "Memory Agent"
+type: agent
+extends: base-command
+dependencies: [context-manager]
+tags: [knowledge, memory, storage, learning, reference]
+version: 1.0
+description: "Intelligent knowledge storage and organization agent"
+argument_hint: "[content|url] [category?] [instructions?]"
+context_required: [knowledge-path, user-prefs]
+
+purpose: "Intelligent capture, processing, and organization of knowledge from various sources including text, URLs, YouTube videos, and documents into a searchable, categorized knowledge base."
+
+activation:
+  display_on_start: true
+  ascii_art: |
+    ╔═════════════════════════════════════════╗
+    ║   ███╗   ███╗███████╗███╗   ███╗ ██████╗║
+    ║   ████╗ ████║██╔════╝████╗ ████║██╔═══██╗║
+    ║   ██╔████╔██║█████╗  ██╔████╔██║██║   ██║║
+    ║   ██║╚██╔╝██║██╔══╝  ██║╚██╔╝██║██║   ██║║
+    ║   ██║ ╚═╝ ██║███████╗██║ ╚═╝ ██║╚██████╔╝║
+    ║   ╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ ║
+    ║         KNOWLEDGE VAULT ACTIVE          ║
+    ╚═════════════════════════════════════════╝
+  greeting: "🧠 Memory Agent initialized! I never forget what matters. Feed me knowledge and I'll make it searchable!"
+  tagline: "Your external brain - capturing, organizing, and retrieving knowledge on demand"
+  activation_sound: "memory_sync"
+
+arguments:
+  - name: "content"
+    type: "required"
+    description: "The content to store or URL to fetch"
+    formats: ["text", "url", "youtube", "file_path", "quote"]
+  
+  - name: "category"
+    type: "optional"
+    description: "Target category for organization"
+    options: ["technology", "finance", "health", "learning", "reference", "projects", "personal", "resources", "media", "legal"]
+  
+  - name: "instructions"
+    type: "optional"
+    description: "Processing instructions or focus areas"
+    examples: ["focus on key points", "extract actionable insights", "summarize main concepts", "include technical details"]
+
+context_requirements:
+  - "Knowledge base path (08-Knowledge/)"
+  - "User preferences for categorization"
+  - "Content processing rules"
+  - "Template selection criteria"
+
+core_capabilities:
+  content_fetching:
+    url_processing:
+      supported_types: ["articles", "blog_posts", "documentation", "news", "research_papers"]
+      extraction_methods:
+        - "HTML content parsing"
+        - "Metadata extraction"
+        - "Key information identification"
+        - "Summary generation"
+      
+    youtube_processing:
+      supported_features:
+        - "Video title and description extraction"
+        - "Transcript fetching (if available)"
+        - "Chapter/timestamp identification"
+        - "Key concept summarization"
+      processing_instructions:
+        - "Extract main topics discussed"
+        - "Identify actionable insights"
+        - "Note important timestamps"
+        - "Summarize conclusions"
+    
+    file_processing:
+      supported_formats: ["pdf", "md", "txt", "doc", "docx"]
+      processing_methods:
+        - "Text extraction"
+        - "Structure preservation"
+        - "Metadata retention"
+        - "Cross-reference creation"
+
+  intelligent_categorization:
+    auto_detection:
+      technology:
+        keywords: ["programming", "software", "API", "framework", "coding", "development", "tech", "algorithm", "database"]
+        patterns: ["github.com", "stackoverflow.com", "developer documentation"]
+        
+      finance:
+        keywords: ["tax", "investment", "budget", "money", "financial", "banking", "insurance", "retirement", "trading"]
+        patterns: ["financial news", "tax forms", "investment platforms"]
+        
+      health:
+        keywords: ["medical", "health", "fitness", "nutrition", "wellness", "doctor", "treatment", "symptoms"]
+        patterns: ["medical journals", "health websites", "fitness apps"]
+        
+      learning:
+        keywords: ["course", "tutorial", "education", "learning", "training", "certification", "skill", "knowledge"]
+        patterns: ["youtube.com/watch", "coursera", "udemy", "educational content"]
+        
+      reference:
+        keywords: ["documentation", "manual", "guide", "cheat sheet", "reference", "specs", "standards"]
+        patterns: ["official docs", "reference materials", "specifications"]
+        
+      projects:
+        keywords: ["project", "client", "work", "task", "deadline", "meeting", "proposal"]
+        patterns: ["project management", "work-related content"]
+        
+      personal:
+        keywords: ["personal", "family", "hobby", "interest", "experience", "reflection", "diary"]
+        patterns: ["personal blogs", "journal entries"]
+        
+      resources:
+        keywords: ["tool", "service", "resource", "utility", "app", "website", "platform"]
+        patterns: ["product pages", "tool directories"]
+        
+      media:
+        keywords: ["video", "podcast", "interview", "webinar", "presentation", "conference"]
+        patterns: ["youtube.com", "vimeo.com", "podcast platforms"]
+        
+      legal:
+        keywords: ["law", "legal", "regulation", "compliance", "contract", "policy", "terms"]
+        patterns: ["legal documents", "government sites", "policy papers"]
+
+    category_override:
+      user_specified: "Always use user-provided category"
+      hashtag_detection: "Extract category from #category/name tags"
+      content_analysis: "Fallback to AI-based categorization"
+
+  content_organization:
+    folder_structure:
+      base_path: "08-Knowledge/"
+      categories:
+        technology: "Technology/"
+        finance: "Finance/"
+        health: "Health/"
+        learning: "Learning/"
+        reference: "Reference/"
+        projects: "Projects/"
+        personal: "Personal/"
+        resources: "Resources/"
+        media: "Media/"
+        legal: "Legal/"
+      
+    filename_patterns:
+      url_based: "{{domain}}-{{title-slug}}-{{date}}.md"
+      content_based: "{{topic-summary}}-{{date}}.md"
+      youtube_based: "{{channel}}-{{video-title-slug}}-{{date}}.md"
+      text_based: "{{first-words}}-{{timestamp}}.md"
+    
+    duplicate_handling:
+      detection_methods:
+        - "URL matching for web content"
+        - "Title similarity analysis"
+        - "Content hash comparison"
+        - "Source deduplication"
+      
+      resolution_strategy:
+        - "Merge similar content with version history"
+        - "Update existing with new information"
+        - "Create cross-references for related content"
+
+knowledge_templates:
+  url_article: |
+    # 📄 {{ title }}
+    
+    **Source:** {{ url }}
+    **Domain:** {{ domain }}
+    **Date Captured:** {{ timestamp }}
+    **Category:** {{ category }}
+    
+    ## Summary
+    {{ ai_summary }}
+    
+    ## Key Points
+    {{ key_points }}
+    
+    ## Content
+    {{ processed_content }}
+    
+    ## Tags
+    {{ tags }} #source/{{ domain }} #captured/{{ date }}
+    
+    ## Related
+    {{ related_links }}
+    
+  youtube_video: |
+    # 🎥 {{ video_title }}
+    
+    **Channel:** {{ channel_name }}
+    **URL:** {{ youtube_url }}
+    **Duration:** {{ duration }}
+    **Date Captured:** {{ timestamp }}
+    **Category:** {{ category }}
+    
+    ## Summary
+    {{ ai_summary }}
+    
+    ## Key Takeaways
+    {{ key_takeaways }}
+    
+    ## Important Timestamps
+    {{ timestamps }}
+    
+    ## Transcript/Notes
+    {{ content_notes }}
+    
+    ## Instructions Followed
+    {{ processing_instructions }}
+    
+    ## Tags
+    {{ tags }} #youtube #video #{{ channel_slug }}
+    
+  text_knowledge: |
+    # 💭 {{ title }}
+    
+    **Type:** Text Knowledge
+    **Date Captured:** {{ timestamp }}
+    **Category:** {{ category }}
+    
+    ## Content
+    {{ content }}
+    
+    ## Context
+    {{ context_info }}
+    
+    ## Processing Notes
+    {{ processing_notes }}
+    
+    ## Tags
+    {{ tags }} #text-knowledge #captured/{{ date }}
+    
+  reference_material: |
+    # 📚 {{ title }}
+    
+    **Source:** {{ source }}
+    **Type:** {{ content_type }}
+    **Date Captured:** {{ timestamp }}
+    **Category:** {{ category }}
+    
+    ## Quick Reference
+    {{ quick_reference }}
+    
+    ## Detailed Content
+    {{ detailed_content }}
+    
+    ## Use Cases
+    {{ use_cases }}
+    
+    ## Related Topics
+    {{ related_topics }}
+    
+    ## Tags
+    {{ tags }} #reference #{{ content_type }}
+
+processing_workflows:
+  url_workflow:
+    steps:
+      1. "Validate and normalize URL"
+      2. "Fetch content using WebFetch tool"
+      3. "Extract title, content, and metadata"
+      4. "Apply content analysis for categorization"
+      5. "Generate summary and key points"
+      6. "Apply URL article template"
+      7. "Save to appropriate category folder"
+      8. "Create cross-references if needed"
+  
+  youtube_workflow:
+    steps:
+      1. "Extract video ID and metadata"
+      2. "Fetch video information (title, channel, description)"
+      3. "Process any additional instructions"
+      4. "Extract key concepts and timestamps"
+      5. "Generate summary based on available content"
+      6. "Apply YouTube template"
+      7. "Save to Media/ or user-specified category"
+      8. "Add to media index"
+  
+  text_workflow:
+    steps:
+      1. "Analyze content for type and category"
+      2. "Extract key concepts and topics"
+      3. "Apply auto-categorization rules"
+      4. "Generate title from content"
+      5. "Apply appropriate template"
+      6. "Save to determined category"
+      7. "Update knowledge index"
+
+search_optimization:
+  indexing:
+    create_files:
+      - "Category index files with links to all items"
+      - "Tag-based cross-reference system"
+      - "Chronological knowledge timeline"
+      - "Source-based organization (domains, channels)"
+    
+    metadata_preservation:
+      - "Original source URLs"
+      - "Capture timestamps"
+      - "Processing instructions used"
+      - "Category assignment reasoning"
+  
+  cross_referencing:
+    automatic_linking:
+      - "Related topics detection"
+      - "Concept clustering"
+      - "Source relationship mapping"
+      - "Tag-based connections"
+
+integration_patterns:
+  capture_agent:
+    trigger: "Content needs immediate capture"
+    action: "Forward to memory agent for permanent storage"
+    data_passed: ["content", "initial tags", "context"]
+  
+  task_agent:
+    trigger: "Knowledge contains actionable items"
+    action: "Extract tasks and forward to task agent"
+    data_passed: ["task description", "due date", "source reference"]
+  
+  project_management:
+    trigger: "Knowledge relates to specific projects"
+    action: "Link to project notes and update project knowledge base"
+    data_passed: ["project context", "knowledge reference", "relevance score"]
+
+output_formats:
+  storage_success:
+    format: |
+      🧠 **Knowledge Stored Successfully**
+      📁 **Location:** {{ file_path }}
+      🏷️ **Category:** {{ category }}
+      📊 **Type:** {{ content_type }}
+      🔗 **Source:** {{ source_info }}
+      📝 **Summary:** {{ brief_summary }}
+      
+  batch_processing:
+    format: |
+      🧠 **Knowledge Batch Processed**
+      📊 **Items processed:** {{ item_count }}
+      📁 **Categories updated:** {{ categories_list }}
+      🔗 **Cross-references created:** {{ cross_refs_count }}
+      ⏱️ **Processing time:** {{ processing_time }}
+      
+  search_results:
+    format: |
+      🔍 **Knowledge Search Results**
+      📊 **Found:** {{ results_count }} items
+      📁 **Categories:** {{ categories_found }}
+      📅 **Date range:** {{ date_range }}
+      🏷️ **Tags:** {{ relevant_tags }}
+
+error_handling:
+  url_fetch_failed:
+    action: "Store URL with error note, allow manual processing later"
+    format: "❌ URL fetch failed: {{ error_message }}"
+    
+  categorization_uncertain:
+    action: "Save to 'Uncategorized' with analysis notes"
+    format: "⚠️ Category uncertain, saved to Uncategorized/"
+    
+  duplicate_detected:
+    action: "Merge or update existing content"
+    format: "🔄 Updated existing knowledge: {{ existing_file }}"
+
+maintenance_tasks:
+  weekly:
+    - "Review uncategorized items"
+    - "Update category indexes"
+    - "Check for broken links"
+    - "Consolidate duplicate entries"
+  
+  monthly:
+    - "Generate knowledge statistics"
+    - "Archive old temporary items"
+    - "Update cross-references"
+    - "Optimize folder structure"

@@ -1,0 +1,305 @@
+name: "Daily Workflow"
+type: workflow
+extends: base-command
+dependencies: [task-agent, health-agent, review-agent, capture-agent]
+tags: [productivity, daily, routine, workflow]
+version: 1.0
+description: "Comprehensive daily workflow orchestrating multiple agents"
+argument_hint: "[mode] [focus?]"
+context_required: [daily-note, user-schedule, goals]
+
+purpose: "Orchestrate a comprehensive daily management workflow that coordinates task management, health tracking, reflection, and planning across multiple specialized agents."
+
+arguments:
+  - name: "mode"
+    type: "required"
+    description: "Workflow mode"
+    options: ["morning", "evening", "full-day", "review", "planning"]
+  
+  - name: "focus"
+    type: "optional"
+    description: "Focus area for the day"
+    options: ["productivity", "health", "creative", "recovery", "social"]
+
+context_requirements:
+  - "Daily note path and structure"
+  - "User schedule and calendar"
+  - "Current goals and priorities"
+  - "Health targets and habits"
+
+workflow_modes:
+  morning_routine:
+    duration: "8-15 minutes"
+    optimal_time: "first 30 minutes after waking"
+    sequence:
+      1:
+        step: "health_checkin"
+        agent: "health-agent"
+        action: "quick morning health assessment"
+        data_capture: "sleep quality, energy level, mood"
+      
+      2:
+        step: "daily_note_creation"
+        agent: "context-manager"
+        action: "create or open daily note"
+        template: "Templates/daily_note_template.md"
+      
+      3:
+        step: "task_review"
+        agent: "task-agent"
+        action: "review scheduled tasks for today"
+        analysis: "priority assessment, time estimation"
+      
+      4:
+        step: "priority_setting"
+        agent: "context-manager"  
+        action: "set top 3 priorities for the day"
+        criteria: "impact, urgency, energy required"
+      
+      5:
+        step: "intention_setting"
+        agent: "review-agent"
+        action: "set daily intention and focus"
+        output: "daily theme and energy allocation"
+    
+    template: |
+      ## 🌅 Morning Start - {{date}}
+      
+      ### Health Check-in ⚡
+      - **Sleep:** {{sleep_quality}}/10 ({{sleep_duration}}h)
+      - **Energy:** {{energy_level}}/10
+      - **Mood:** {{mood_rating}}/10
+      
+      ### Today's Focus 🎯
+      **Theme:** {{daily_theme}}
+      **Energy Allocation:** {{energy_plan}}
+      
+      ### Top Priorities
+      1. **{{priority_1}}** ({{time_estimate_1}})
+      2. **{{priority_2}}** ({{time_estimate_2}})
+      3. **{{priority_3}}** ({{time_estimate_3}})
+      
+      ### Scheduled Tasks
+      {{scheduled_tasks}}
+      
+      ### Daily Intention
+      {{daily_intention}}
+      
+      #daily #morning #{{date}}
+
+  evening_routine:
+    duration: "10-20 minutes"
+    optimal_time: "1-2 hours before bed"
+    sequence:
+      1:
+        step: "task_completion_review"
+        agent: "task-agent"
+        action: "review completed and incomplete tasks"
+        metrics: "completion rate, time accuracy"
+      
+      2:
+        step: "health_logging"
+        agent: "health-agent"
+        action: "log daily health metrics"
+        data: "exercise, nutrition, stress, achievements"
+      
+      3:
+        step: "daily_reflection"
+        agent: "review-agent"
+        action: "structured daily reflection"
+        prompts: "wins, challenges, learning, gratitude"
+      
+      4:
+        step: "habit_tracking"
+        agent: "health-agent"
+        action: "update habit consistency"
+        tracking: "streak counts, habit chain status"
+      
+      5:
+        step: "tomorrow_preparation"
+        agent: "task-agent"
+        action: "review and prepare tomorrow's tasks"
+        planning: "priority setting, time blocking"
+    
+    template: |
+      ## 🌙 Evening Review - {{date}}
+      
+      ### Task Performance 📊
+      - **Completed:** {{completed_tasks}}/{{planned_tasks}} ({{completion_rate}}%)
+      - **Top Achievement:** {{top_achievement}}
+      - **Time Accuracy:** {{time_accuracy}}%
+      
+      ### Health Summary 💪
+      - **Exercise:** {{exercise_completed}}
+      - **Nutrition:** {{nutrition_quality}}/10
+      - **Stress Level:** {{stress_level}}/10
+      - **Habits:** {{habit_completion}}
+      
+      ### Daily Reflection 🤔
+      - **What went well?** {{daily_wins}}
+      - **What was challenging?** {{daily_challenges}}
+      - **What did I learn?** {{daily_learning}}
+      - **Grateful for:** {{gratitude_items}}
+      
+      ### Tomorrow Prep 🚀
+      **Top Priority:** {{tomorrow_priority}}
+      **Focus Area:** {{tomorrow_focus}}
+      **Energy Plan:** {{tomorrow_energy}}
+      
+      #daily #evening #{{date}}
+
+  full_day_workflow:
+    description: "Complete daily management from morning to evening"
+    duration: "20-35 minutes total"
+    phases:
+      morning: "morning_routine"
+      midday_checkin: "optional 5-minute progress review"
+      evening: "evening_routine"
+    
+    midday_checkin:
+      duration: "3-5 minutes"
+      timing: "after lunch or mid-afternoon"
+      actions:
+        - "Quick energy and progress assessment"
+        - "Adjust afternoon priorities if needed"
+        - "Handle any urgent captures"
+        - "Brief stress/wellness check"
+
+  review_mode:
+    description: "Focused review and analysis of daily patterns"
+    duration: "15-25 minutes"
+    scope: "past 3-7 days"
+    analysis:
+      - "Task completion trends"
+      - "Health metric patterns"
+      - "Energy and mood correlations"
+      - "Habit consistency tracking"
+      - "Goal progress assessment"
+
+daily_templates:
+  structured_daily_note:
+    template_file: "Templates/daily_note_template.md"
+    description: "Use the structured daily note template with all sections"
+
+  minimal_daily_note:
+    format: |
+      # {{date}}
+      
+      **Focus:** {{daily_focus}}
+      
+      ## Tasks
+      {{task_list}}
+      
+      ## Health
+      {{health_summary}}
+      
+      ## Reflection
+      {{quick_reflection}}
+      
+      #daily #{{date}}
+
+workflow_integration:
+  agent_coordination:
+    task_health_sync:
+      - "Consider energy levels when scheduling tasks"
+      - "Account for exercise time in daily planning"
+      - "Adjust task intensity based on health status"
+    
+    review_capture_sync:
+      - "Process captured items during review"
+      - "Extract actionable items from reflections"
+      - "Link daily insights to broader goals"
+    
+    habit_goal_alignment:
+      - "Track habit progress toward long-term goals"
+      - "Adjust daily routines based on goal priorities"
+      - "Celebrate goal milestones in daily practice"
+
+  data_flow:
+    morning_to_evening:
+      - "Morning priorities → Evening completion review"
+      - "Morning energy → Evening energy assessment"
+      - "Morning intention → Evening reflection alignment"
+    
+    daily_to_weekly:
+      - "Daily completion rates → Weekly productivity analysis"
+      - "Daily health metrics → Weekly wellness trends"
+      - "Daily reflections → Weekly pattern recognition"
+
+customization_options:
+  routine_variations:
+    weekday_vs_weekend:
+      weekday:
+        focus: "work productivity and professional goals"
+        duration: "shorter, efficient routines"
+        priorities: "high-impact professional tasks"
+      
+      weekend:
+        focus: "personal projects and wellness"
+        duration: "more relaxed, flexible timing"
+        priorities: "relationship, health, creative pursuits"
+    
+    energy_based_adaptation:
+      high_energy_days:
+        - "More challenging tasks scheduled"
+        - "Creative work prioritized"
+        - "Extended morning routine with planning"
+      
+      low_energy_days:
+        - "Routine and administrative tasks"
+        - "Shorter, gentler routines"
+        - "Focus on maintenance and recovery"
+
+  personal_preferences:
+    morning_person: "Extended morning routine, brief evening"
+    evening_person: "Quick morning check-in, comprehensive evening"
+    structured: "Detailed templates with specific timings"
+    flexible: "Minimal structure with optional components"
+
+success_metrics:
+  routine_consistency:
+    - "Daily workflow completion percentage"
+    - "Morning routine streak tracking"
+    - "Evening reflection consistency"
+    - "Health logging adherence"
+  
+  effectiveness_indicators:
+    - "Task completion rate improvement"
+    - "Health metric trend stability"
+    - "Daily satisfaction scores"
+    - "Goal progress alignment"
+  
+  life_integration:
+    - "Work-life balance maintenance"
+    - "Stress level management"
+    - "Overall life satisfaction trends"
+    - "Long-term goal advancement"
+
+output_formats:
+  morning_kickoff:
+    format: |
+      🌅 Daily Workflow Started
+      🎯 Focus: {{daily_theme}}
+      ⚡ Energy: {{energy_level}}/10
+      📋 Top priorities: {{priority_count}} tasks
+      💪 Health plan: {{health_focus}}
+      ⏰ Estimated completion: {{estimated_time}}
+      
+  evening_summary:
+    format: |
+      🌙 Daily Summary Complete
+      ✅ Tasks: {{completion_rate}}% ({{completed}}/{{planned}})
+      💪 Health: {{health_score}}/10 avg
+      🌟 Top win: {{biggest_win}}
+      📈 Streak: {{current_streak}} days
+      🚀 Tomorrow: {{tomorrow_ready}}
+      
+  workflow_analytics:
+    format: |
+      📊 Daily Workflow Analytics - {{period}}
+      🔄 Consistency: {{routine_consistency}}%
+      ✅ Task completion: {{avg_completion}}% average
+      💪 Health tracking: {{health_consistency}}% logged
+      🌟 Satisfaction: {{avg_satisfaction}}/10
+      📈 Trend: {{overall_trend}}
+      💡 Insight: {{key_pattern}}

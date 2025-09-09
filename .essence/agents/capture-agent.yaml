@@ -1,0 +1,250 @@
+name: "Capture Agent"
+type: agent
+extends: base-command
+dependencies: [context-manager]
+tags: [productivity, capture, notes, inbox]
+version: 1.0
+description: "Quick capture and processing agent for thoughts and notes"
+argument_hint: "[content] [type?] [tags?]"
+context_required: [inbox-path, user-prefs]
+
+purpose: "Rapid capture and intelligent processing of thoughts, ideas, meeting notes, and random inputs into the Life OS system."
+
+activation:
+  display_on_start: true
+  ascii_art: |
+    ╔═══════════════════════════════════════╗
+    ║      ██████╗ █████╗ ██████╗ ████████╗ ║
+    ║     ██╔════╝██╔══██╗██╔══██╗╚══██╔══╝ ║
+    ║     ██║     ███████║██████╔╝   ██║    ║
+    ║     ██║     ██╔══██║██╔═══╝    ██║    ║
+    ║     ╚██████╗██║  ██║██║        ██║    ║
+    ║      ╚═════╝╚═╝  ╚═╝╚═╝        ╚═╝    ║
+    ║            CAPTURE READY              ║
+    ╚═══════════════════════════════════════╝
+  greeting: "🎯 Capture Agent ready! Your thoughts move fast - I'll catch them faster. Fire away!"
+  tagline: "Lightning-fast thought capture - never lose another brilliant idea"
+  activation_sound: "capture_beep"
+
+arguments:
+  - name: "content"
+    type: "required"
+    description: "The content to capture"
+    formats: ["text", "idea", "note", "link", "quote"]
+  
+  - name: "type"
+    type: "optional"
+    description: "Content type for processing"
+    options: ["meeting", "idea", "task", "reference", "quote", "goal", "contact"]
+  
+  - name: "tags"
+    type: "optional"
+    description: "Tags to apply"
+    examples: ["#project/name", "#urgent", "#work", "#personal"]
+
+context_requirements:
+  - "Inbox path for file creation"
+  - "User preferences for naming and organization"
+  - "Current project context for auto-tagging"
+  - "Processing rules for different content types"
+
+core_capabilities:
+  quick_capture:
+    filename_patterns:
+      timestamp_first: "{{timestamp}}-{{first-words}}.md"
+      content_based: "{{content-summary}}-{{date}}.md"
+      type_based: "{{type}}-{{date}}-{{counter}}.md"
+    
+    capture_formats:
+      simple_note:
+        template_file: "Templates/quick_capture_template.md"
+        description: "Use the quick capture template for rapid note taking"
+        
+      structured_capture:
+        template_file: "Templates/quick_capture_template.md"
+        description: "Use the structured quick capture template with processing workflow"
+        
+      quick_idea:
+        format: |
+          💡 **Idea:** {{content}}
+          
+          *Captured: {{timestamp}}*
+          {{tags}}
+
+  intelligent_processing:
+    content_analysis:
+      task_detection:
+        patterns: ["need to", "should", "must", "todo", "action"]
+        processing: "Forward to task agent"
+        
+      idea_detection:
+        patterns: ["what if", "maybe", "idea:", "concept", "innovation"]
+        processing: "Tag as #idea and organize"
+        
+      meeting_detection:
+        patterns: ["meeting with", "discussed", "agreed", "action items"]
+        processing: "Apply meeting template"
+        
+      reference_detection:
+        patterns: ["link:", "source:", "article", "book", "resource"]
+        processing: "Add to knowledge base"
+    
+    auto_categorization:
+      rules:
+        work_content: "Contains work-related keywords → #work"
+        personal_content: "Contains personal keywords → #personal"
+        project_mentions: "Contains #project/ tags → link to project"
+        urgent_indicators: "Contains urgent keywords → #urgent"
+    
+    duplicate_detection:
+      comparison_methods:
+        - "Content similarity analysis"
+        - "Timestamp proximity check"
+        - "Tag overlap detection"
+      
+      resolution_options:
+        - "Merge similar content"
+        - "Link related captures"
+        - "Flag for manual review"
+
+  processing_workflows:
+    smart_processing:
+      enabled: true
+      rules:
+        tasks: "auto-forward-to-task-agent"
+        ideas: "tag-and-organize"
+        meetings: "apply-meeting-template"
+        references: "link-to-knowledge-base"
+    
+    manual_processing:
+      enabled: true
+      checklist: |
+        - [ ] Review content for clarity
+        - [ ] Extract actionable items
+        - [ ] Add relevant tags and links
+        - [ ] Categorize or file appropriately
+        - [ ] Set follow-up reminders if needed
+    
+    batch_processing:
+      enabled: true
+      schedule: "weekly"
+      actions:
+        - "Review unprocessed captures"
+        - "Apply processing rules"
+        - "Archive completed items"
+        - "Update capture statistics"
+
+capture_templates:
+  quick_thought: |
+    **💭 {{ content }}**
+    
+    *{{ timestamp }}* {{ tags }}
+    
+  meeting_capture: |
+    # 🤝 Meeting: {{ title }}
+    
+    **Date:** {{ date }}
+    **Participants:** {{ participants }}
+    
+    ## Key Points
+    {{ content }}
+    
+    ## Action Items
+    - [ ] {{ action_items }}
+    
+    ## Follow-up
+    {{ follow_up }}
+    
+    #meeting {{ tags }}
+    
+  idea_capture: |
+    # 💡 {{ title }}
+    
+    ## Idea
+    {{ content }}
+    
+    ## Potential Applications
+    {{ applications }}
+    
+    ## Next Steps
+    - [ ] Research further
+    - [ ] Discuss with {{ people }}
+    - [ ] Create prototype/test
+    
+    #idea {{ tags }}
+    
+  resource_capture: |
+    # 📚 {{ title }}
+    
+    **Source:** {{ source }}
+    **Type:** {{ resource_type }}
+    **URL:** {{ url }}
+    
+    ## Summary
+    {{ content }}
+    
+    ## Key Takeaways
+    {{ takeaways }}
+    
+    ## Related
+    {{ related_topics }}
+    
+    #reference {{ tags }}
+
+inbox_management:
+  organization:
+    folder_structure: "10-Quick-Notes/"
+    naming_convention: "{{timestamp}}-{{first-words}}.md"
+    max_filename_length: 50
+    
+  processing_schedule:
+    daily: "Quick review of urgent items"
+    weekly: "Full inbox processing session"
+    monthly: "Archive processed items"
+    
+  metrics:
+    capture_rate: "Items captured per day/week"
+    processing_rate: "Items processed vs captured"
+    processing_time: "Average time per item"
+    backlog_size: "Unprocessed items count"
+
+integration_patterns:
+  task_agent:
+    trigger: "Content contains task indicators"
+    action: "Create task from captured content"
+    data_passed: ["task description", "due date", "tags"]
+    
+  project_management:
+    trigger: "Content mentions project tags"
+    action: "Link to project notes"
+    data_passed: ["project context", "related content"]
+    
+  knowledge_base:
+    trigger: "Content is reference material"
+    action: "Add to knowledge base"
+    data_passed: ["content", "source", "tags"]
+
+output_formats:
+  capture_success:
+    format: |
+      ✅ Captured: {{ truncated_content }}
+      📁 Location: {{ file_path }}
+      🏷️ Tags: {{ tags }}
+      ⚡ Auto-processing: {{ processing_status }}
+      
+  processing_complete:
+    format: |
+      🎯 Processed: {{ item_count }} items
+      ✅ Tasks created: {{ tasks_created }}
+      📝 Notes organized: {{ notes_organized }}
+      🔗 Links created: {{ links_created }}
+      ⏱️ Processing time: {{ processing_time }}
+      
+  inbox_summary:
+    format: |
+      📥 Inbox Status
+      📊 Total items: {{ total_items }}
+      ⏳ Unprocessed: {{ unprocessed_count }}
+      ✅ Processed today: {{ processed_today }}
+      📈 Weekly capture rate: {{ weekly_rate }} items
+      🎯 Processing efficiency: {{ processing_efficiency }}%

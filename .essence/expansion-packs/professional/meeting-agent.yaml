@@ -1,0 +1,301 @@
+name: "Meeting Agent"
+type: expansion
+extends: base-command
+dependencies: [capture-agent, task-agent, context-manager]
+tags: [professional, meetings, collaboration, communication]
+version: 1.0
+description: "Meeting facilitation, notes, and follow-up management agent"
+argument_hint: "[action] [meeting-type?] [participants?]"
+context_required: [calendar, project-context, team-info]
+
+purpose: "Comprehensive meeting management including preparation, facilitation, note-taking, action item tracking, and follow-up orchestration for maximum meeting effectiveness and productivity."
+
+arguments:
+  - name: "action"
+    type: "required"
+    description: "Meeting action to perform"
+    options: ["prep", "start", "notes", "follow-up", "analyze", "schedule"]
+  
+  - name: "meeting_type"
+    type: "optional"
+    description: "Type of meeting"
+    options: ["standup", "planning", "review", "brainstorm", "one-on-one", "client", "team"]
+  
+  - name: "participants"
+    type: "optional"
+    description: "Meeting attendees or stakeholder list"
+
+context_requirements:
+  - "Calendar access for scheduling"
+  - "Project context and current priorities"
+  - "Team information and roles"
+  - "Previous meeting history and outcomes"
+
+core_capabilities:
+  meeting_preparation:
+    agenda_creation:
+      templates:
+        standup:
+          - "What did you accomplish yesterday?"
+          - "What will you work on today?"
+          - "Any blockers or impediments?"
+          
+        planning:
+          - "Objectives and goals"
+          - "Current status review"
+          - "Resource allocation"
+          - "Timeline and milestones"
+          - "Risk assessment"
+          
+        review:
+          - "Accomplishments since last review"
+          - "Metrics and performance data"
+          - "Issues and challenges"
+          - "Lessons learned"
+          - "Next steps"
+          
+        brainstorm:
+          - "Problem definition"
+          - "Idea generation (divergent)"
+          - "Idea evaluation (convergent)"
+          - "Action planning"
+    
+    pre_meeting_checklist:
+      - "Agenda created and shared"
+      - "Relevant documents prepared"
+      - "Participants confirmed"
+      - "Meeting space/link ready"
+      - "Time zone considerations checked"
+      - "Recording/note-taking setup"
+
+  meeting_facilitation:
+    meeting_roles:
+      facilitator:
+        - "Guide discussion flow"
+        - "Keep time and agenda"
+        - "Ensure participation"
+        - "Manage conflicts"
+        
+      timekeeper:
+        - "Track agenda timing"
+        - "Give time warnings"
+        - "Suggest time adjustments"
+        
+      note_taker:
+        - "Capture key decisions"
+        - "Record action items"
+        - "Note important discussions"
+        - "Track attendance"
+    
+    facilitation_techniques:
+      - "Round-robin for equal participation"
+      - "Parking lot for off-topic items"
+      - "Decision-making frameworks"
+      - "Conflict resolution strategies"
+
+  note_taking_system:
+    structured_notes:
+      template_file: "Templates/meeting_template.md"
+      description: "Use the structured meeting template for comprehensive note-taking"
+    
+    real_time_capture:
+      - "Key quotes and insights"
+      - "Decision points and rationale"  
+      - "Action items with owners and dates"
+      - "Parking lot items for later"
+      - "Next meeting needs"
+
+  action_item_management:
+    action_item_tracking:
+      creation:
+        - "Clear action description"
+        - "Assigned owner"
+        - "Due date"
+        - "Success criteria"
+        - "Dependencies"
+        
+      follow_up:
+        - "Progress check-ins"
+        - "Obstacle identification"
+        - "Timeline adjustments"
+        - "Completion verification"
+    
+    integration_with_task_agent:
+      - "Convert action items to tasks"
+      - "Set reminders for due dates"
+      - "Track completion status"
+      - "Include in daily/weekly reviews"
+
+meeting_templates:
+  standup_meeting:
+    duration: "15 minutes"
+    frequency: "daily"
+    template: |
+      # 🏃 Daily Standup - {{date}}
+      
+      **Team:** {{team_name}}
+      **Time:** {{time}}
+      
+      ## Round Robin
+      {{#each participants}}
+      ### {{name}}
+      - **Yesterday:** {{yesterday}}
+      - **Today:** {{today}} 
+      - **Blockers:** {{blockers}}
+      {{/each}}
+      
+      ## Blockers to Address
+      {{blockers_list}}
+      
+      ## Announcements
+      {{announcements}}
+      
+      #standup #{{team_tag}} #{{date}}
+      
+  project_planning:
+    duration: "60-90 minutes"
+    template: |
+      # 📋 Project Planning - {{project_name}}
+      
+      **Date:** {{date}}
+      **Duration:** {{duration}}
+      **Participants:** {{participants}}
+      
+      ## Project Overview
+      **Goal:** {{project_goal}}
+      **Success Criteria:** {{success_criteria}}
+      **Timeline:** {{timeline}}
+      
+      ## Current Status
+      {{current_status}}
+      
+      ## Discussion Topics
+      {{discussion_topics}}
+      
+      ## Resource Allocation
+      {{resource_allocation}}
+      
+      ## Timeline & Milestones
+      {{timeline_milestones}}
+      
+      ## Risks & Mitigation
+      {{risks_mitigation}}
+      
+      ## Action Items
+      {{action_items}}
+      
+      #planning #project #{{project_tag}}
+      
+  retrospective:
+    duration: "60 minutes"
+    template: |
+      # 🔄 Retrospective - {{period}}
+      
+      **Team:** {{team_name}}
+      **Period:** {{review_period}}
+      **Participants:** {{participants}}
+      
+      ## What Went Well? 🌟
+      {{went_well}}
+      
+      ## What Could Improve? 🔧
+      {{could_improve}}
+      
+      ## Action Items 🎯
+      {{action_items}}
+      
+      ## Experiments to Try 🧪
+      {{experiments}}
+      
+      ## Metrics Review 📊
+      {{metrics}}
+      
+      #retrospective #{{team_tag}} #{{period}}
+
+meeting_analytics:
+  effectiveness_metrics:
+    quantitative:
+      - "Meeting duration vs planned time"
+      - "Action item completion rate"
+      - "Participant attendance rate"
+      - "Time to decision making"
+      
+    qualitative:
+      - "Participant satisfaction scores"
+      - "Goal achievement assessment"
+      - "Discussion quality rating"
+      - "Follow-through effectiveness"
+  
+  meeting_optimization:
+    efficiency_improvements:
+      - "Reduce meeting frequency where possible"
+      - "Shorten duration through better preparation"
+      - "Improve agenda adherence"
+      - "Increase action item completion"
+      
+    participation_enhancement:
+      - "Rotate facilitation roles"
+      - "Use structured discussion techniques"
+      - "Address participation imbalances"
+      - "Create psychological safety"
+
+follow_up_automation:
+  immediate_post_meeting:
+    - "Distribute meeting notes"
+    - "Create tasks for action items"
+    - "Schedule follow-up check-ins"
+    - "Update project status"
+    
+  ongoing_tracking:
+    - "Monitor action item progress"
+    - "Send reminder notifications"
+    - "Prepare status updates"
+    - "Schedule next meeting if recurring"
+
+integration_patterns:
+  task_agent:
+    - "Convert action items to trackable tasks"
+    - "Set deadlines and reminders"
+    - "Track completion and progress"
+    - "Include in productivity metrics"
+    
+  capture_agent:
+    - "Quick capture during meetings"
+    - "Process meeting outcomes"
+    - "Organize meeting artifacts"
+    - "Link to project contexts"
+    
+  review_agent:
+    - "Include meeting effectiveness in reviews"
+    - "Analyze meeting patterns and outcomes"
+    - "Identify improvement opportunities"
+    - "Track relationship to project success"
+
+output_formats:
+  meeting_summary:
+    format: |
+      🤝 Meeting Complete: {{meeting_title}}
+      ⏱️ Duration: {{actual_duration}} (planned: {{planned_duration}})
+      👥 Attendees: {{attendee_count}}/{{invited_count}}
+      ✅ Decisions: {{decision_count}}
+      🎯 Actions: {{action_count}} assigned
+      📅 Next meeting: {{next_meeting}}
+      
+  action_items_summary:
+    format: |
+      🎯 Action Items from {{meeting_title}}
+      📋 Total: {{total_actions}}
+      👤 Your actions: {{personal_actions}}
+      📅 This week: {{this_week_actions}}
+      ⚠️ Overdue: {{overdue_actions}}
+      🔄 Follow-up: {{follow_up_date}}
+      
+  meeting_analytics:
+    format: |
+      📊 Meeting Analytics - {{period}}
+      🤝 Total meetings: {{total_meetings}}
+      ⏱️ Average duration: {{avg_duration}} min
+      ✅ Action completion: {{completion_rate}}%
+      👥 Average attendance: {{avg_attendance}}%
+      🎯 Most productive: {{best_meeting_type}}
+      💡 Optimization: {{key_optimization}}

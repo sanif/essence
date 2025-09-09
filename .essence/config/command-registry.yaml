@@ -1,0 +1,334 @@
+name: "Command Registry"
+type: registry
+version: 1.0
+description: "Central registry and metadata system for all Essence commands"
+
+purpose: "Central registry system for all Essence commands, agents, workflows, and expansion packs with metadata, dependencies, and discovery capabilities."
+
+registry_structure:
+  core_commands:
+    base_command:
+      type: "core"
+      version: "1.0"
+      status: "active"
+      path: ".essence/core/base-command.yaml"
+      description: "Foundation template for all commands"
+      dependencies: []
+      provides: ["command structure", "error handling", "reusable patterns"]
+      
+    command_builder:
+      type: "utility"
+      version: "1.0"
+      status: "active"
+      path: ".essence/core/command-builder.yaml"
+      description: "Compose complex commands from simple components"
+      dependencies: ["base-command"]
+      provides: ["workflow composition", "command chaining", "error recovery"]
+      
+    context_manager:
+      type: "utility"
+      version: "1.0"
+      status: "active"
+      path: ".essence/core/context-manager.yaml"
+      description: "Manage shared context between commands"
+      dependencies: ["base-command"]
+      provides: ["context sharing", "state management", "data persistence"]
+
+  config_commands:
+    settings:
+      type: "config"
+      version: "1.0"
+      status: "active"
+      path: ".essence/config/settings.yaml"
+      description: "System configuration and user preferences"
+      dependencies: ["base-command"]
+      provides: ["system settings", "user preferences", "agent configuration"]
+      
+    command_registry:
+      type: "registry"
+      version: "1.0"
+      status: "active"
+      path: ".essence/config/command-registry.yaml"
+      description: "Command registry and metadata"
+      dependencies: ["base-command"]
+      provides: ["command discovery", "dependency tracking", "system overview"]
+
+  agent_commands:
+    task_agent:
+      type: "agent"
+      version: "1.0"
+      status: "active"
+      path: ".essence/agents/task-agent.yaml"
+      description: "Task management and Mac Reminders integration"
+      dependencies: ["base-command", "context-manager"]
+      provides: ["task creation", "reminders", "productivity tracking"]
+      contexts: ["daily-note", "user-prefs"]
+      
+    health_agent:
+      type: "agent"
+      version: "1.0"
+      status: "active"
+      path: ".essence/agents/health-agent.yaml"
+      description: "Health and wellness tracking"
+      dependencies: ["base-command", "context-manager"]
+      provides: ["health metrics", "habit tracking", "wellness insights"]
+      contexts: ["daily-note", "health-goals"]
+      
+    capture_agent:
+      type: "agent"
+      version: "1.0"
+      status: "active"
+      path: ".essence/agents/capture-agent.yaml"
+      description: "Quick capture and note processing"
+      dependencies: ["base-command", "context-manager"]
+      provides: ["idea capture", "note processing", "inbox management"]
+      contexts: ["inbox-path", "user-prefs"]
+      
+    review_agent:
+      type: "agent"
+      version: "1.0"
+      status: "active"
+      path: ".essence/agents/review-agent.yaml"
+      description: "Reflection and review processes"
+      dependencies: ["base-command", "context-manager", "task-agent"]
+      provides: ["daily review", "weekly review", "pattern analysis"]
+      contexts: ["daily-notes", "goals"]
+      
+    finance_agent:
+      type: "agent"
+      version: "1.0"
+      status: "active"
+      path: ".essence/agents/finance-agent.yaml"
+      description: "Personal finance tracking and budgeting"
+      dependencies: ["base-command", "context-manager"]
+      provides: ["expense tracking", "budget monitoring", "financial goals"]
+      contexts: ["finance-goals", "budget"]
+
+  workflow_commands:
+    daily_workflow:
+      type: "workflow"
+      version: "1.0"
+      status: "active"
+      path: ".essence/workflows/daily-workflow.yaml"
+      description: "Comprehensive daily management workflow"
+      dependencies: ["base-command", "task-agent", "health-agent", "review-agent", "capture-agent"]
+      provides: ["morning routine", "evening routine", "daily planning"]
+      contexts: ["daily-note", "user-schedule"]
+      
+    weekly_workflow:
+      type: "workflow"
+      version: "1.0"
+      status: "active"
+      path: ".essence/workflows/weekly-workflow.yaml"
+      description: "Weekly review and planning system"
+      dependencies: ["base-command", "review-agent", "task-agent", "health-agent"]
+      provides: ["weekly review", "goal assessment", "system optimization"]
+      contexts: ["weekly-notes", "goals"]
+      
+    gtd_workflow:
+      type: "workflow"
+      version: "1.0"
+      status: "active"
+      path: ".essence/workflows/gtd-workflow.yaml"
+      description: "Getting Things Done methodology implementation"
+      dependencies: ["base-command", "capture-agent", "task-agent", "review-agent"]
+      provides: ["GTD phases", "inbox processing", "project management"]
+      contexts: ["inbox", "projects", "contexts"]
+
+  expansion_packs:
+    productivity_pack:
+      focus_agent:
+        type: "expansion"
+        version: "1.0"
+        status: "active"
+        path: ".essence/expansion-packs/productivity/focus-agent.yaml"
+        description: "Deep work and focus optimization"
+        dependencies: ["base-command", "task-agent", "health-agent"]
+        provides: ["focus sessions", "attention training", "distraction management"]
+        pack: "productivity"
+        
+      time_blocking_agent:
+        type: "expansion"
+        version: "1.0"
+        status: "active"
+        path: ".essence/expansion-packs/productivity/time-blocking-agent.yaml"
+        description: "Advanced time blocking and calendar optimization"
+        dependencies: ["base-command", "task-agent", "focus-agent"]
+        provides: ["time blocking", "energy matching", "schedule optimization"]
+        pack: "productivity"
+        
+    creative_pack:
+      brainstorm_agent:
+        type: "expansion"
+        version: "1.0"
+        status: "active"
+        path: ".essence/expansion-packs/creative/brainstorm-agent.yaml"
+        description: "Creative brainstorming and ideation"
+        dependencies: ["base-command", "capture-agent"]
+        provides: ["brainstorming methods", "idea development", "creative techniques"]
+        pack: "creative"
+        
+    professional_pack:
+      meeting_agent:
+        type: "expansion"
+        version: "1.0"
+        status: "active"
+        path: ".essence/expansion-packs/professional/meeting-agent.yaml"
+        description: "Meeting management and facilitation"
+        dependencies: ["base-command", "capture-agent", "task-agent"]
+        provides: ["meeting prep", "note taking", "action item tracking"]
+        pack: "professional"
+
+command_metadata:
+  status_types:
+    - "active": "Command is available and functional"
+    - "beta": "Command is available but may have issues"
+    - "deprecated": "Command is obsolete, use alternative"
+    - "development": "Command is under development"
+    - "disabled": "Command is temporarily unavailable"
+  
+  command_types:
+    - "core": "Essential system functionality"
+    - "agent": "Specialized domain agents"
+    - "workflow": "Multi-step processes"
+    - "utility": "Helper and support functions"
+    - "expansion": "Optional feature extensions"
+    - "config": "Configuration and settings"
+    - "registry": "System catalogs and indexes"
+  
+  dependency_tracking:
+    direct_dependencies: "Commands required for operation"
+    transitive_dependencies: "Dependencies of dependencies"
+    circular_detection: "Prevent circular dependency chains"
+    dependency_resolution: "Automatic loading order"
+
+discovery_system:
+  command_search:
+    by_type: "Find all commands of specific type"
+    by_tag: "Find commands with specific tags"
+    by_capability: "Find commands providing specific features"
+    by_context: "Find commands working in specific contexts"
+    
+  capability_mapping:
+    task_management: ["task-agent", "gtd-workflow", "daily-workflow"]
+    health_tracking: ["health-agent", "daily-workflow"]
+    note_taking: ["capture-agent", "meeting-agent"]
+    reflection: ["review-agent", "daily-workflow", "weekly-workflow"]
+    productivity: ["focus-agent", "time-blocking-agent", "gtd-workflow"]
+    creativity: ["brainstorm-agent"]
+    collaboration: ["meeting-agent"]
+    finance: ["finance-agent"]
+    
+  context_mapping:
+    daily_note: ["task-agent", "health-agent", "daily-workflow", "review-agent"]
+    user_preferences: ["task-agent", "capture-agent", "settings"]
+    calendar: ["time-blocking-agent", "meeting-agent"]
+    project_context: ["meeting-agent", "gtd-workflow"]
+    health_goals: ["health-agent"]
+    finance_goals: ["finance-agent"]
+
+system_health:
+  validation_checks:
+    dependency_integrity: "All dependencies are satisfied"
+    circular_dependencies: "No circular dependency chains"
+    missing_commands: "All referenced commands exist"
+    version_compatibility: "Compatible command versions"
+    
+  health_metrics:
+    total_commands: "{{command_count}}"
+    active_commands: "{{active_count}}"
+    broken_dependencies: "{{broken_deps}}"
+    coverage_percentage: "{{coverage}}%"
+    
+  maintenance_tasks:
+    - "Regular dependency validation"
+    - "Command health monitoring" 
+    - "Performance impact assessment"
+    - "Usage pattern analysis"
+
+command_lifecycle:
+  development_stages:
+    conception: "Initial idea and requirements"
+    design: "Architecture and interface design"
+    implementation: "YAML specification creation"
+    testing: "Validation and integration testing"
+    deployment: "Registration and activation"
+    maintenance: "Updates and optimization"
+    retirement: "Deprecation and migration"
+    
+  version_management:
+    semantic_versioning: "MAJOR.MINOR.PATCH format"
+    backward_compatibility: "Maintain API stability"
+    migration_paths: "Upgrade procedures"
+    deprecation_policy: "Gradual phase-out process"
+
+registry_operations:
+  registration:
+    auto_discovery: "Scan .essence folders for new commands"
+    manual_registration: "Explicit command addition"
+    validation: "Verify command specifications"
+    dependency_checking: "Ensure dependencies are met"
+    
+  querying:
+    list_commands: "Show all available commands"
+    command_details: "Show specific command information"
+    dependency_tree: "Show command dependencies"
+    reverse_dependencies: "Show what depends on command"
+    
+  management:
+    enable_command: "Activate disabled command"
+    disable_command: "Temporarily deactivate command"
+    update_command: "Refresh command metadata"
+    remove_command: "Unregister command"
+
+output_formats:
+  command_list:
+    format: |
+      📚 Essence Command Registry
+      
+      ## Core ({{core_count}})
+      {{core_commands}}
+      
+      ## Agents ({{agent_count}})
+      {{agent_commands}}
+      
+      ## Workflows ({{workflow_count}})
+      {{workflow_commands}}
+      
+      ## Expansion Packs ({{expansion_count}})
+      {{expansion_commands}}
+      
+      📊 Total: {{total_commands}} commands
+      ✅ Active: {{active_count}} | ⚠️ Issues: {{issue_count}}
+      
+  command_details:
+    format: |
+      📋 {{command_name}} ({{command_type}})
+      
+      **Version:** {{version}}
+      **Status:** {{status}}
+      **Path:** {{yaml_path}}
+      
+      **Description:** {{description}}
+      
+      **Dependencies:** {{dependencies}}
+      **Provides:** {{capabilities}}
+      **Contexts:** {{required_contexts}}
+      
+      **Usage:** {{usage_hint}}
+      
+  health_report:
+    format: |
+      🏥 System Health Report
+      
+      📊 Commands: {{total_commands}} total, {{active_commands}} active
+      ✅ Health: {{health_percentage}}%
+      🔗 Dependencies: {{resolved_deps}}/{{total_deps}} resolved
+      ⚠️ Issues: {{issue_count}}
+      
+      {{#if issues}}
+      ## Issues Found
+      {{issues_list}}
+      {{/if}}
+      
+      💡 Recommendations: {{recommendations}}

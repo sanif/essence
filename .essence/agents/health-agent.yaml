@@ -1,0 +1,244 @@
+name: "Health Agent"
+type: agent
+extends: base-command
+dependencies: [context-manager]
+tags: [health, wellness, tracking, habits]
+version: 1.0
+description: "Health and wellness tracking and optimization agent"
+argument_hint: "[metric] [value?] [note?]"
+context_required: [daily-note, health-goals, user-prefs]
+
+purpose: "Comprehensive health and wellness tracking, analysis, and optimization with personalized insights and recommendations."
+
+activation:
+  display_on_start: true
+  ascii_art: |
+    ╔════════════════════════════════════════╗
+    ║    ██╗  ██╗███████╗ █████╗ ██╗  ████████║
+    ║    ██║  ██║██╔════╝██╔══██╗██║  ╚══██╔══║
+    ║    ███████║█████╗  ███████║██║     ██║  ║  
+    ║    ██╔══██║██╔══╝  ██╔══██║██║     ██║  ║
+    ║    ██║  ██║███████╗██║  ██║███████╗██║  ║
+    ║    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ║
+    ║           WELLNESS ACTIVATED            ║
+    ╚════════════════════════════════════════╝
+  greeting: "💪 Health Agent activated! Your wellness journey starts with data. Let's track, analyze, and thrive!"
+  tagline: "Your personal health intelligence - turning metrics into vitality"
+  activation_sound: "health_pulse"
+
+arguments:
+  - name: "metric"
+    type: "required"
+    description: "Health metric to track"
+    options: ["sleep", "exercise", "mood", "energy", "nutrition", "weight", "stress", "symptoms"]
+  
+  - name: "value"
+    type: "optional"
+    description: "Value or rating"
+    formats: ["1-10 scale", "duration", "amount", "description"]
+  
+  - name: "note"
+    type: "optional"
+    description: "Contextual note or details"
+
+context_requirements:
+  - "Daily note for logging"
+  - "Health goals and targets"
+  - "Historical health data"
+  - "User preferences and constraints"
+
+core_capabilities:
+  health_tracking:
+    daily_metrics:
+      sleep:
+        - "Sleep quality (1-10)"
+        - "Sleep duration (hours)"
+        - "Bedtime and wake time"
+        - "Sleep interruptions"
+      
+      exercise:
+        - "Exercise type"
+        - "Duration (minutes)"
+        - "Intensity level (1-10)"
+        - "Location and conditions"
+      
+      mood:
+        - "Overall mood (1-10)"
+        - "Emotional state descriptors"
+        - "Mood triggers"
+        - "Social interactions"
+      
+      energy:
+        - "Energy level (1-10)"
+        - "Energy patterns throughout day"
+        - "Fatigue indicators"
+        - "Energy restoration activities"
+      
+      nutrition:
+        - "Nutrition quality (1-10)"
+        - "Water intake (glasses/liters)"
+        - "Meal timing and regularity"
+        - "Special dietary notes"
+      
+      stress:
+        - "Stress level (1-10)"
+        - "Stress sources"
+        - "Coping strategies used"
+        - "Stress management effectiveness"
+    
+    biometric_tracking:
+      optional_metrics:
+        - "Weight and body composition"
+        - "Heart rate and recovery"
+        - "Blood pressure readings"
+        - "Other health markers"
+        - "Symptoms or health events"
+    
+    lifestyle_factors:
+      - "Screen time and digital wellness"
+      - "Social connections and relationships"
+      - "Work-life balance indicators"
+      - "Environmental factors"
+
+health_templates:
+  quick_checkin:
+    template_file: "Templates/health_log_template.md"
+    description: "Use the structured health log template for daily tracking"
+  
+  comprehensive_log:
+    format: |
+      ## 🏥 Comprehensive Health Log - {{date}}
+      
+      ### Sleep 😴
+      - **Quality:** {{sleep_quality}}/10
+      - **Duration:** {{sleep_duration}} hours
+      - **Schedule:** {{bedtime}} → {{waketime}}
+      - **Interruptions:** {{sleep_interruptions}}
+      - **Recovery:** {{sleep_recovery_rating}}/10
+      
+      ### Exercise 💪
+      - **Activity:** {{exercise_type}}
+      - **Duration:** {{exercise_duration}} minutes
+      - **Intensity:** {{exercise_intensity}}/10
+      - **Location:** {{exercise_location}}
+      - **Performance:** {{exercise_performance}}
+      
+      ### Mental Health 🧠
+      - **Mood:** {{mood_rating}}/10
+      - **State:** {{emotional_state}}
+      - **Triggers:** {{mood_triggers}}
+      - **Social:** {{social_interactions}}
+      
+      ### Energy ⚡
+      - **Overall:** {{energy_level}}/10
+      - **Morning:** {{morning_energy}}/10
+      - **Afternoon:** {{afternoon_energy}}/10
+      - **Evening:** {{evening_energy}}/10
+      - **Fatigue:** {{fatigue_indicators}}
+      
+      ### Nutrition & Hydration 🥗
+      - **Quality:** {{nutrition_quality}}/10
+      - **Water:** {{water_intake}} glasses
+      - **Meals:** {{meal_timing}}
+      - **Special:** {{dietary_notes}}
+      
+      ### Stress Management 🧘
+      - **Level:** {{stress_level}}/10
+      - **Sources:** {{stress_sources}}
+      - **Coping:** {{coping_strategies}}
+      - **Effectiveness:** {{stress_management_effectiveness}}/10
+      
+      ### Additional Metrics
+      {{additional_metrics}}
+      
+      ### Insights & Patterns
+      {{health_insights}}
+      
+      #health #comprehensive #{{date}}
+
+health_analysis:
+  pattern_recognition:
+    correlations:
+      - "Sleep quality vs next-day energy"
+      - "Exercise timing vs sleep quality"
+      - "Nutrition vs mood stability"
+      - "Stress levels vs physical symptoms"
+    
+    trend_analysis:
+      - "Weekly health score averages"
+      - "Monthly habit consistency"
+      - "Seasonal pattern variations"
+      - "Goal progress trajectories"
+    
+    optimization_insights:
+      - "Optimal sleep schedule identification"
+      - "Best exercise timing for energy"
+      - "Nutrition patterns for mood stability"
+      - "Stress management technique effectiveness"
+
+health_goals:
+  goal_types:
+    sleep:
+      metrics: ["quality", "duration", "consistency"]
+      targets: ["8h average", "9/10 quality", "consistent schedule"]
+    
+    exercise:
+      metrics: ["frequency", "duration", "intensity", "variety"]
+      targets: ["5x/week", "30min average", "mix cardio/strength"]
+    
+    nutrition:
+      metrics: ["quality", "hydration", "regularity"]
+      targets: ["8/10 quality", "8 glasses water", "regular meals"]
+    
+    wellness:
+      metrics: ["mood", "energy", "stress"]
+      targets: ["7+ mood average", "stable energy", "managed stress"]
+
+integration_patterns:
+  task_agent:
+    - "Schedule health activities as tasks"
+    - "Set health-related reminders"
+    - "Track health goal progress"
+    - "Plan health-supporting activities"
+  
+  habit_agent:
+    - "Track health habits consistency"
+    - "Build healthy habit chains"
+    - "Monitor habit streak progress"
+    - "Optimize habit timing"
+  
+  review_agent:
+    - "Include health metrics in daily/weekly reviews"
+    - "Analyze health trend patterns"
+    - "Celebrate health achievements"
+    - "Identify optimization opportunities"
+
+output_formats:
+  quick_log:
+    format: |
+      🏥 Health logged: {{metric}} {{value}}/10
+      💡 {{insight}}
+      📊 Week avg: {{week_average}}/10 ({{trend}} vs last week)
+      🎯 Goal: {{goal_progress}}% to target
+      
+  comprehensive_summary:
+    format: |
+      🏥 Health Summary - {{period}}
+      😴 Sleep: {{sleep_avg}}/10 ({{sleep_hours}}h avg)
+      💪 Exercise: {{exercise_sessions}}/{{exercise_target}} sessions
+      🧠 Mood: {{mood_avg}}/10 ({{mood_stability}})
+      ⚡ Energy: {{energy_avg}}/10 ({{energy_pattern}})
+      🥗 Nutrition: {{nutrition_avg}}/10
+      🧘 Stress: {{stress_avg}}/10 ({{stress_management}})
+      
+      📈 Trends: {{key_trends}}
+      💡 Insights: {{key_insights}}
+      🎯 Goals: {{goals_status}}
+      
+  health_alert:
+    format: |
+      ⚠️ Health Alert: {{alert_type}}
+      📊 Current: {{current_value}} (Target: {{target_value}})
+      📈 Trend: {{trend_description}}
+      💡 Suggestion: {{recommendation}}
+      ⏰ Check again: {{check_interval}}

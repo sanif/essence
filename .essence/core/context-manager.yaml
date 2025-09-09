@@ -1,0 +1,224 @@
+name: "Context Manager"
+type: utility
+extends: base-command
+version: 1.0
+description: "Manage shared context between commands"
+tags: [core, utility, context, state]
+
+purpose: "Centralized context management for sharing data between commands, maintaining state across workflows, and providing consistent access to user data."
+
+context_types:
+  user_context:
+    description: "Persistent user preferences and settings"
+    structure:
+      name: "User Name"
+      timezone: "America/New_York"
+      work_schedule: "9-17"
+      preferences:
+        task_format: "markdown"
+        reminder_default: "15min"
+        health_tracking: true
+    storage: "persistent"
+    access: "read/write"
+    
+  session_context:
+    description: "Current session state and temporary data"
+    structure:
+      current_date: "{{date:YYYY-MM-DD}}"
+      active_project: "string"
+      today_habits: "array"
+      pending_tasks: "number"
+      last_command: "string"
+    storage: "memory"
+    access: "read/write"
+    cleanup: "session_end"
+    
+  file_context:
+    description: "Information about current files and locations"
+    structure:
+      daily_note: "01-Daily/{{date:YYYY-MM-DD}}.md"
+      weekly_note: "02-Weekly/{{date:YYYY-[W]WW}}.md"
+      inbox: "10-Quick-Notes/"
+      templates: "Templates/"
+    storage: "computed"
+    access: "read-only"
+    
+  workflow_context:
+    description: "State passed between workflow steps"
+    structure:
+      step: "current-workflow-step"
+      completed: "array of completed steps"
+      pending: "array of pending steps"
+      data: "object of workflow data"
+    storage: "memory"
+    access: "read/write"
+    scope: "workflow"
+
+context_operations:
+  reading:
+    get_context:
+      syntax: "get-context: path.to.value"
+      example: "user.preferences.task-format → 'markdown'"
+      
+    has_context:
+      syntax: "has-context: path.to.value"
+      returns: "boolean"
+      
+    list_context:
+      syntax: "list-context: path.to.*"
+      returns: "array of matching paths"
+      
+  writing:
+    set_context:
+      syntax: "set-context: path.to.value = new-value"
+      example: "session.active-project = 'New Project'"
+      
+    append_context:
+      syntax: "append-context: path.to.array += new-item"
+      example: "workflow.completed += ['task-creation']"
+      
+    merge_context:
+      syntax: "merge-context: path.to.object += {new: data}"
+      
+  clearing:
+    clear_context:
+      syntax: "clear-context: path.to.value"
+      effect: "removes specific value"
+      
+    reset_context:
+      syntax: "reset-context: section-name"
+      effect: "resets entire context section"
+      
+    cleanup_session:
+      syntax: "cleanup-session"
+      effect: "clears temporary data only"
+
+context_patterns:
+  daily_note:
+    note_path: "01-Daily/{{date:YYYY-MM-DD}}.md"
+    exists_check: "file-exists"
+    sections:
+      - "## TODOs"
+      - "## Health"
+      - "## Habits"
+      - "## Reflection"
+      
+  task_management:
+    active_tasks: "query-daily-note('#task and not #done')"
+    overdue_tasks: "query-tasks('due < today')"
+    project_tasks: "query-tasks('#project/{{active-project}}')"
+    
+  health_tracking:
+    current_streak: "count-habit-streak"
+    weekly_average: "calculate-week-average"
+    goals: "user.health-goals"
+    metrics: ["sleep", "exercise", "mood", "energy"]
+
+context_inheritance:
+  rules:
+    - "Child commands inherit parent context"
+    - "More specific context overrides general"
+    - "Private context requires explicit access"
+    - "Read-only context cannot be modified"
+    
+  patterns:
+    daily_routine:
+      inherits: ["user", "session", "files"]
+      children:
+        task_agent: ["session", "files", "user.task-prefs"]
+        health_agent: ["session", "user.health-prefs"]
+        capture_agent: ["files.inbox"]
+
+context_storage:
+  memory_session:
+    characteristics:
+      - "Fast access"
+      - "Temporary data"
+      - "Lost when session ends"
+    best_for: ["workflow state", "calculations", "temporary results"]
+    
+  file_based_persistent:
+    characteristics:
+      - "Survives sessions"
+      - "Slower access"
+      - "Disk-based storage"
+    best_for: ["user preferences", "history", "configuration"]
+    
+  daily_note_embedded:
+    characteristics:
+      - "Embedded in daily notes"
+      - "Accessible via note queries"
+      - "Human readable"
+    best_for: ["daily tracking", "habits", "tasks", "reflections"]
+
+context_api:
+  basic_operations:
+    read:
+      - "get-context: path.to.value"
+      - "has-context: path.to.value"
+      - "list-context: path.to.*"
+      
+    write:
+      - "set-context: path.to.value = new-value"
+      - "append-context: path.to.array += new-item"
+      - "merge-context: path.to.object += {new: data}"
+      
+    clear:
+      - "clear-context: path.to.value"
+      - "reset-context: entire-context"
+      - "cleanup-session: temp-data-only"
+      
+  advanced_operations:
+    computed_values:
+      syntax: "compute-context: variable = expression"
+      example: "tasks-completion-rate = #{completed-tasks} / #{total-tasks}"
+      
+    watchers:
+      syntax: "watch-context: {path: trigger}"
+      example: "session.pending-tasks → task-summary-update"
+      
+    validation:
+      syntax: "validate-context: {path: rule}"
+      example: "user.work-schedule: regex('\\d{1,2}-\\d{1,2}')"
+
+context_security:
+  private_context:
+    description: "Sensitive data that shouldn't be logged"
+    paths:
+      - "user.personal-info"
+      - "session.auth-tokens"
+      - "temp.sensitive-notes"
+    access_rules:
+      - "No logging"
+      - "No external exposure"
+      - "Explicit access required"
+      
+  readonly_context:
+    description: "System data that commands can't modify"
+    paths:
+      - "system.version"
+      - "files.system-paths"
+      - "user.creation-date"
+    access_rules:
+      - "Read-only access"
+      - "System managed"
+      - "No user modification"
+
+context_lifecycle:
+  session_start:
+    - "Load persistent user context"
+    - "Initialize session context"
+    - "Compute file paths"
+    - "Setup workflow context"
+    
+  command_execution:
+    - "Inherit parent context"
+    - "Apply command-specific context"
+    - "Execute with available context"
+    - "Update context as needed"
+    
+  session_end:
+    - "Save persistent changes"
+    - "Clear temporary data"
+    - "Log context usage"
+    - "Cleanup memory"

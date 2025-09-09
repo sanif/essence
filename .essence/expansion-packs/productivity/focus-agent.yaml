@@ -1,0 +1,247 @@
+name: "Focus Agent"
+type: expansion
+extends: base-command
+dependencies: [task-agent, health-agent, context-manager]
+tags: [productivity, focus, deep-work, attention]
+version: 1.0
+description: "Deep work and focus optimization agent"
+argument_hint: "[mode] [duration?] [task?]"
+context_required: [focus-goals, distraction-patterns, energy-levels]
+
+purpose: "Specialized agent for deep work optimization, attention management, and focus session orchestration with distraction blocking and productivity optimization."
+
+arguments:
+  - name: "mode"
+    type: "required"
+    description: "Focus mode type"
+    options: ["deep-work", "pomodoro", "flow-state", "creative", "analytical"]
+  
+  - name: "duration"
+    type: "optional"
+    description: "Session length"
+    options: ["25m", "90m", "2h", "until-complete"]
+  
+  - name: "task"
+    type: "optional"
+    description: "Specific task or project to focus on"
+
+context_requirements:
+  - "Current energy levels and cognitive state"
+  - "Historical focus performance data"
+  - "Environmental factors and distractions"
+  - "Task complexity and requirements"
+
+core_capabilities:
+  focus_session_management:
+    pre_focus_preparation:
+      - "Environment optimization checklist"
+      - "Distraction elimination protocol"
+      - "Energy and hydration assessment"
+      - "Task clarity and outcome definition"
+    
+    during_focus_monitoring:
+      - "Attention drift detection"
+      - "Break timing optimization"
+      - "Energy level tracking"
+      - "Progress milestone celebration"
+    
+    post_focus_analysis:
+      - "Session effectiveness evaluation"
+      - "Distraction pattern analysis"
+      - "Energy consumption assessment"
+      - "Quality and quantity metrics"
+
+focus_modes:
+  deep_work:
+    duration: "90-120 minutes"
+    characteristics:
+      - "Complex, cognitively demanding tasks"
+      - "Single-task focus with zero interruptions"
+      - "High energy requirement"
+      - "Maximum creative or analytical output"
+  
+  pomodoro:
+    duration: "25+5 minutes"
+    characteristics:
+      - "Structured work-break cycles"
+      - "Good for medium complexity tasks"
+      - "Sustainable energy management"
+      - "Progress through iteration"
+  
+  flow_state:
+    duration: "Variable"
+    characteristics:
+      - "Optimal challenge-skill balance"
+      - "Immersive, losing track of time"
+      - "High intrinsic motivation"
+      - "Peak performance conditions"
+  
+  creative:
+    duration: "45-90 minutes"
+    characteristics:
+      - "Idea generation and exploration"
+      - "Lower pressure, more experimental"
+      - "Divergent thinking encouraged"
+      - "Inspiration and insight focused"
+
+focus_templates:
+  deep_work_session:
+    file_pattern: "focus-deep-work-{{date}}-{{time}}.md"
+    sections:
+      pre_session_setup:
+        - "Task and expected outcome"
+        - "Duration and energy level"
+        - "Environment checklist"
+        - "Task preparation checklist"
+      
+      session_log:
+        - "Start and planned end times"
+        - "Progress checkpoints table"
+        - "Actual completion time"
+      
+      post_session_review:
+        - "Outcome and focus quality ratings"
+        - "Energy consumption tracking"
+        - "Success factors and distractions"
+        - "Improvements for next session"
+        - "Work output documentation"
+  
+  pomodoro_session:
+    file_pattern: "pomodoro-{{date}}.md"
+    sections:
+      session_plan:
+        - "Focus area and planned pomodoros"
+        - "Task description"
+      
+      pomodoro_log:
+        - "Individual pomodoro tracking"
+        - "Break activities and refresh ratings"
+        - "Task completion percentages"
+        - "Focus ratings and distractions"
+      
+      session_summary:
+        - "Total statistics and averages"
+        - "Best/worst performance analysis"
+        - "Energy trends"
+  
+  flow_state_session:
+    file_pattern: "flow-{{date}}.md"
+    sections:
+      pre_flow_conditions:
+        - "Task and skill/challenge levels"
+        - "Motivation and environment"
+        - "Flow indicators checklist"
+      
+      session_experience:
+        - "Flow achievement and duration"
+        - "Quality metrics and ratings"
+      
+      flow_analysis:
+        - "Entry conditions and maintenance factors"
+        - "Disruption points"
+        - "Optimal conditions and replication strategy"
+
+focus_optimization:
+  attention_training:
+    exercises:
+      - name: "mindfulness-breathing"
+        duration: "5-10 minutes"
+        purpose: "pre-focus meditation"
+      
+      - name: "single-point-focus"
+        purpose: "concentrate on one object/idea"
+      
+      - name: "attention-switching"
+        purpose: "controlled movement between tasks"
+      
+      - name: "distraction-resistance"
+        purpose: "maintain focus despite interruptions"
+  
+  environmental_optimization:
+    factors:
+      lighting: "natural light preferred, adjustable brightness"
+      sound: "brown noise, classical music, or silence"
+      temperature: "68-72°F optimal for cognitive performance"
+      air_quality: "well-ventilated space, plants beneficial"
+      visual_clarity: "clean, organized, minimal distractions"
+  
+  energy_management:
+    strategies:
+      circadian_alignment: "work with natural energy peaks"
+      glucose_stability: "steady blood sugar for sustained focus"
+      hydration_tracking: "adequate water intake monitoring"
+      break_timing: "strategic recovery before energy depletion"
+
+integration_patterns:
+  health_agent:
+    - "Monitor energy levels before/during/after focus sessions"
+    - "Track correlation between health metrics and focus quality"
+    - "Optimize nutrition and sleep for better cognitive performance"
+    - "Include focus work as part of overall wellness"
+  
+  task_agent:
+    - "Break complex tasks into focus-friendly chunks"
+    - "Estimate focus time requirements for task planning"
+    - "Track task completion rates during different focus modes"
+    - "Prioritize high-cognitive tasks for peak focus periods"
+  
+  review_agent:
+    - "Analyze focus session effectiveness in daily/weekly reviews"
+    - "Identify patterns in focus quality and performance"
+    - "Adjust focus strategies based on reflection insights"
+    - "Celebrate deep work achievements and breakthroughs"
+
+advanced_features:
+  distraction_pattern_analysis:
+    tracking_categories:
+      internal_distractions: ["mind wandering", "worry", "planning"]
+      external_distractions: ["notifications", "noise", "interruptions"]
+      trigger_identification: "common distraction initiation points"
+      resistance_strategies: "personalized distraction management"
+  
+  focus_state_prediction:
+    optimal_conditions:
+      time_of_day: "personal peak cognitive hours"
+      energy_level: "minimum threshold for different focus types"
+      environmental_factors: ["temperature", "lighting", "sound"]
+      task_complexity: "matching mode to cognitive demands"
+  
+  progressive_focus_training:
+    development_areas:
+      attention_span_building: "gradually increase session length"
+      distraction_tolerance: "build resistance to interruptions"
+      mode_specialization: "develop expertise in specific focus types"
+      meta_cognitive_skills: "awareness of attention and focus state"
+
+output_formats:
+  session_start:
+    format: |
+      🎯 {mode} Session Starting
+      📋 Task: {task}
+      ⏱️ Duration: {duration} (until {end_time})
+      🧠 Energy: {energy}/10 - {energy_description}
+      🔇 Environment: {environment_status}
+      📍 Workspace: {workspace_status}
+      🎯 Success criteria: {success_criteria}
+  
+  session_complete:
+    format: |
+      ✅ {mode} Session Complete ({actual_duration} minutes)
+      🎯 Focus Quality: {focus_quality}/10 - {quality_description}
+      📊 Progress: {completion_percent}% of planned work completed
+      💡 Key breakthrough: {breakthrough}
+      ⚡ Energy: {energy_remaining}/10 remaining ({energy_management})
+      🎉 Achievement: {achievement}
+      📝 Note: {optimization_insight}
+  
+  weekly_analytics:
+    format: |
+      📊 Weekly Focus Analytics
+      ⏱️ Total Deep Work: {deep_work_hours} hours (target: {target_hours}) {target_status}
+      🎯 Average Focus Quality: {avg_focus_quality}/10 (↑{trend} vs last week)
+      🍅 Pomodoro Success: {completed_pomodoros}/{planned_pomodoros} completed ({success_rate}% completion)
+      🌊 Flow States: {flow_count} achieved (avg {avg_flow_duration} min duration)
+      📱 Distraction Resistance: {resistance_percent}% (↑{resistance_improvement}% improvement)
+      🏆 Best Session: {best_session} ({best_session_type})
+      🔧 Optimization: {optimization_discovery}
+      💡 Discovery: {key_discovery}

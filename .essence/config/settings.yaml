@@ -1,0 +1,352 @@
+name: "Essence System Settings"
+type: config
+version: 1.0
+description: "Central configuration management for the Essence command system including user preferences, system defaults, agent behaviors, and workflow customizations"
+
+system_configuration:
+  core_settings:
+    version: "1.0"
+    install_date: "2024-01-15"
+    last_updated: "2024-01-15"
+    mode: "full" # options: minimal, standard, full, custom
+    debug_level: "info" # options: none, error, warn, info, debug
+    auto_update: true
+    backup_enabled: true
+    analytics_enabled: true # anonymized usage analytics
+
+  file_paths:
+    vault_root: "."
+    essence_root: ".essence"
+    commands_root: ".claude/commands"
+    daily_notes: "01-Daily"
+    weekly_notes: "02-Weekly"
+    inbox: "10-Quick-Notes"
+    templates: "Templates"
+    scripts: "scripts"
+    backup: ".essence-backups"
+
+  default_contexts:
+    user:
+      name: "{{USER_NAME}}"
+      timezone: "{{USER_TIMEZONE}}"
+      work_schedule: "9-17"
+      language: "en"
+      date_format: "YYYY-MM-DD"
+      time_format: "24h"
+
+    system:
+      auto_create_daily: true
+      auto_link_related: true
+      auto_tag_suggestions: true
+      context_preservation: true
+      cross_agent_communication: true
+
+agent_configuration:
+  task_agent:
+    default_reminder_time: "15min"
+    task_format: "markdown-checklist"
+    priority_system: "eisenhower-matrix" # options: simple, eisenhower-matrix, numeric
+    auto_scheduling: true
+    time_estimation: "enabled"
+    mac_reminders_integration: true
+    tags:
+      work: ["#work", "#professional", "#career"]
+      personal: ["#personal", "#life", "#family"]
+      urgent: ["#urgent", "#asap", "#emergency"]
+      someday: ["#someday", "#maybe", "#later"]
+
+  health_agent:
+    metrics_enabled:
+      sleep: true
+      exercise: true
+      mood: true
+      energy: true
+      nutrition: true
+      stress: true
+      weight: false # user choice
+
+    tracking_frequency: "daily"
+    goal_integration: true
+    correlation_analysis: true
+
+    scales:
+      default: "1-10"
+      sleep_quality: "1-10"
+      energy_level: "1-10"
+      mood_rating: "1-10"
+      stress_level: "1-10"
+
+    reminders:
+      morning_checkin: "8:00"
+      evening_reflection: "21:00"
+      weekly_review: "Sunday 19:00"
+
+  capture_agent:
+    auto_processing: "smart" # options: off, manual, smart, auto
+    inbox_location: "10-Quick-Notes"
+    filename_pattern: "{{timestamp}}-{{first-words}}"
+    auto_categorization: true
+    duplicate_detection: true
+
+    processing_rules:
+      tasks: "auto-forward-to-task-agent"
+      ideas: "tag-and-organize"
+      meetings: "apply-meeting-template"
+      references: "link-to-knowledge-base"
+
+    cleanup_schedule: "weekly" # when to archive processed items
+
+  review_agent:
+    daily_reflection:
+      enabled: true
+      time: "evening"
+      prompts: "standard" # options: minimal, standard, detailed, custom
+
+    weekly_review:
+      enabled: true
+      schedule: "Sunday evening"
+      duration: "45-60min"
+      sections: ["metrics", "reflection", "planning"]
+
+    monthly_review:
+      enabled: true
+      schedule: "last Sunday of month"
+      duration: "90-120min"
+
+    analytics:
+      trend_analysis: true
+      pattern_recognition: true
+      goal_correlation: true
+
+  finance_agent:
+    currency: "USD"
+    budget_period: "monthly"
+    categories:
+      essential: ["housing", "food", "transportation", "utilities"]
+      lifestyle: ["entertainment", "dining", "shopping", "hobbies"]
+      savings: ["emergency", "retirement", "investments", "goals"]
+
+    alerts:
+      budget_threshold: 85 # percentage
+      overspend_notification: true
+      goal_milestone: true
+
+    tracking:
+      auto_categorization: true
+      receipt_storage: false
+      investment_tracking: false # user choice
+
+workflow_configuration:
+  daily_workflow:
+    morning_routine:
+      enabled: true
+      start_time: "flexible" # or specific time like "8:00"
+      duration: "8-10min"
+      components: ["health-checkin", "task-review", "priority-setting"]
+
+    evening_routine:
+      enabled: true
+      start_time: "flexible"
+      duration: "10-15min"
+      components: ["task-completion", "health-log", "reflection", "tomorrow-prep"]
+
+    throughout_day:
+      quick_capture: true
+      task_updates: true
+      health_reminders: true
+
+  weekly_workflow:
+    full_review:
+      enabled: true
+      preferred_day: "Sunday"
+      preferred_time: "evening"
+      duration: "45-60min"
+
+    quick_review:
+      enabled: false
+      duration: "20-30min"
+
+    components:
+      metrics_analysis: true
+      goal_progress: true
+      system_optimization: true
+      next_week_planning: true
+
+    automation:
+      data_aggregation: true
+      report_generation: true
+      insights_suggestions: true
+
+expansion_packs:
+  productivity_pack:
+    focus_agent:
+      enabled: true
+      default_mode: "deep-work"
+      session_tracking: true
+      distraction_monitoring: false # requires external tools
+
+    time_blocking_agent:
+      enabled: true
+      calendar_integration: false # requires calendar access
+      energy_optimization: true
+      buffer_time: 15 # minutes between blocks
+
+    pomodoro_timer:
+      work_duration: 25 # minutes
+      short_break: 5
+      long_break: 15
+      sessions_before_long_break: 4
+
+  creative_pack:
+    brainstorm_agent:
+      enabled: true
+      default_method: "mind-mapping"
+      idea_storage: "automatic"
+      cross_pollination: true # connect ideas across sessions
+
+    inspiration_tracking:
+      enabled: false
+      sources: ["books", "articles", "conversations", "experiences"]
+
+  professional_pack:
+    meeting_agent:
+      enabled: true
+      auto_templates: true
+      action_item_tracking: true
+      effectiveness_tracking: true
+
+    project_management:
+      enabled: false # advanced feature
+      integration: "none" # options: none, notion, asana, trello
+
+user_preferences:
+  interface:
+    output_style: "friendly" # options: minimal, standard, friendly, detailed
+    emoji_usage: "moderate" # options: none, minimal, moderate, heavy
+    progress_indicators: true
+    success_celebrations: true
+    error_guidance: "helpful" # options: minimal, standard, helpful
+
+    notifications:
+      completion_confirmations: true
+      warning_alerts: true
+      milestone_celebrations: true
+      system_updates: true
+
+  automation:
+    auto_linking: true
+    smart_suggestions: true
+    pattern_recognition: true
+    predictive_scheduling: false # requires learning period
+
+    command_chaining: true # allow commands to trigger other commands
+    context_preservation: true # maintain context between commands
+    learning_adaptation: true # system learns from usage patterns
+
+  privacy:
+    data_collection: "anonymous-analytics-only"
+    cloud_sync: false
+    external_integrations: "user-controlled"
+    sensitive_data_handling: "local-only"
+
+    logging:
+      usage_statistics: true
+      performance_metrics: true
+      error_reporting: true
+      personal_data: false
+
+integrations:
+  external_tools:
+    calendar:
+      enabled: false
+      provider: "none" # options: none, gcal, outlook, apple
+      sync_level: "read-only" # options: none, read-only, two-way
+
+    reminders:
+      mac_reminders: true
+
+    file_sync:
+      enabled: false
+      provider: "none" # options: none, icloud, dropbox, gdrive
+
+    ai_services:
+      enabled: false
+      provider: "none" # options: none, openai, anthropic
+
+  scripts:
+    reminder_script:
+      path: "./scripts/reminder.sh"
+      enabled: true
+      permissions: "verified"
+
+    backup_script:
+      path: "./scripts/backup.sh"
+      enabled: false
+      schedule: "weekly"
+
+performance_settings:
+  system:
+    cache_enabled: true
+    cache_duration: "1h" # for computed results
+    parallel_processing: true
+    batch_operations: true
+
+    limits:
+      max_ideas_per_session: 500
+      max_tasks_per_view: 100
+      max_history_items: 1000
+
+    optimization:
+      auto_cleanup: true
+      compress_old_data: true
+      index_rebuilding: "weekly"
+
+  memory:
+    context_retention: "24h" # how long to keep session context
+    history_cleanup: "monthly"
+    temporary_files: "auto-delete"
+
+    storage_limits:
+      max_capture_size: "10MB"
+      max_session_data: "100MB"
+      warning_threshold: "1GB"
+
+advanced_settings:
+  experimental:
+    ai_assisted_planning: false
+    predictive_analytics: false
+    advanced_correlations: false
+    voice_commands: false
+
+    beta_features:
+      enabled: false
+      feedback_collection: true
+      auto_updates: false
+
+  developer:
+    debug_mode: false
+    verbose_logging: false
+    command_tracing: false
+    performance_profiling: false
+
+    custom_commands:
+      enabled: true
+      validation: "strict"
+      sandboxing: true
+
+settings_management:
+  commands:
+    show: "/settings show → display current settings"
+    update: "/settings update [setting] [value] → update specific setting"
+    reset: "/settings reset [section] → reset section to defaults"
+    export: "/settings export → export settings for backup"
+    import: "/settings import [file] → import settings from backup"
+    validate: "/settings validate → check settings for errors"
+
+  categories:
+    system: "/settings system → system-wide settings"
+    agents: "/settings agents → agent-specific settings"
+    workflows: "/settings workflows → workflow configurations"
+    ui: "/settings ui → user interface preferences"
+    privacy: "/settings privacy → privacy and data settings"
+    performance: "/settings performance → performance optimizations"

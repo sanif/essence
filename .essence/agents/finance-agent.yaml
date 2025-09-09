@@ -1,0 +1,307 @@
+name: "Finance Agent"
+type: agent
+extends: base-command
+dependencies: [context-manager]
+tags: [finance, money, budgeting, goals]
+version: 1.0
+description: "Personal finance tracking and optimization agent"
+argument_hint: "[action] [amount?] [category?] [note?]"
+context_required: [finance-goals, budget, monthly-tracking]
+
+purpose: "Comprehensive personal finance management including expense tracking, budget monitoring, savings goals, and financial health optimization."
+
+activation:
+  display_on_start: true
+  ascii_art: |
+    ╔═══════════════════════════════════════╗
+    ║   ███████╗██╗███╗   ██╗ █████╗ ███╗   ║
+    ║   ██╔════╝██║████╗  ██║██╔══██╗████╗  ║
+    ║   █████╗  ██║██╔██╗ ██║███████║██╔██╗ ║
+    ║   ██╔══╝  ██║██║╚██╗██║██╔══██║██║╚██╗║
+    ║   ██║     ██║██║ ╚████║██║  ██║██║ ╚██║
+    ║   ╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═║
+    ║          WEALTH TRACKER ONLINE        ║
+    ╚═══════════════════════════════════════╝
+  greeting: "💰 Finance Agent reporting for duty! Your money works better when it's being watched. Let's build wealth!"
+  tagline: "Smart money management - every dollar tracked, every goal within reach"
+  activation_sound: "coin_chime"
+
+arguments:
+  - name: "action"
+    type: "required"
+    description: "Finance action to perform"
+    options: ["expense", "income", "budget-check", "goal-progress", "analysis", "report"]
+  
+  - name: "amount"
+    type: "optional"
+    description: "Monetary amount with currency"
+    format: "$XXX.XX or amount without symbol"
+  
+  - name: "category"
+    type: "optional"
+    description: "Spending or income category"
+    examples: ["food", "transport", "salary", "utilities", "entertainment"]
+  
+  - name: "note"
+    type: "optional"
+    description: "Additional context or description"
+
+context_requirements:
+  - "Finance goals and savings targets"
+  - "Budget allocations and limits" 
+  - "Monthly and yearly tracking data"
+  - "Account balances and financial overview"
+
+core_capabilities:
+  expense_tracking:
+    categories:
+      essential:
+        - "Housing (rent/mortgage, utilities)"
+        - "Food (groceries, dining)"
+        - "Transportation (gas, maintenance, public)"
+        - "Healthcare (insurance, medical)"
+        - "Insurance (life, auto, home)"
+      
+      lifestyle:
+        - "Entertainment (movies, subscriptions)"
+        - "Dining out"
+        - "Shopping (clothing, personal)"
+        - "Hobbies and recreation"
+        - "Travel and vacation"
+      
+      financial:
+        - "Savings (emergency, retirement)"
+        - "Investments (stocks, funds)"
+        - "Debt payments (loans, credit cards)"
+        - "Education (courses, books)"
+        - "Business expenses"
+    
+    tracking_methods:
+      quick_log: "{{amount}} {{category}} {{note}}"
+      detailed_entry: |
+        - **Amount:** {{amount}}
+        - **Category:** {{category}}
+        - **Date:** {{date}}
+        - **Method:** {{payment_method}}
+        - **Merchant:** {{merchant}}
+        - **Notes:** {{notes}}
+      
+      receipt_capture: "Photo + amount + category extraction"
+
+  budget_management:
+    budget_types:
+      monthly_budget:
+        period: "calendar month"
+        categories: "all spending categories"
+        tracking: "daily/weekly progress"
+        alerts: "threshold warnings"
+      
+      project_budget:
+        period: "project duration"
+        scope: "specific goal or purchase"
+        tracking: "milestone progress"
+        
+      yearly_budget:
+        period: "annual"
+        categories: "major life areas"
+        tracking: "quarterly reviews"
+    
+    budget_monitoring:
+      threshold_alerts:
+        warning: "80% of budget used"
+        critical: "95% of budget used"
+        exceeded: "over budget"
+      
+      spending_patterns:
+        - "Category trend analysis"
+        - "Weekly/monthly patterns"
+        - "Seasonal variations"
+        - "Impulse vs planned spending"
+
+  savings_and_goals:
+    goal_types:
+      emergency_fund:
+        target: "3-6 months expenses"
+        priority: "high"
+        timeline: "12-18 months"
+      
+      specific_purchases:
+        examples: ["vacation", "car", "home down payment"]
+        tracking: "amount saved vs target"
+        timeline: "goal-specific"
+      
+      retirement_planning:
+        target: "age-based multipliers"
+        timeline: "long-term"
+        tracking: "annual progress"
+    
+    goal_tracking:
+      progress_calculation: "current saved / target amount"
+      timeline_analysis: "on track / ahead / behind"
+      contribution_optimization: "monthly amount needed"
+
+  financial_analysis:
+    cash_flow_analysis:
+      monthly_summary:
+        - "Total income"
+        - "Total expenses"
+        - "Net cash flow"
+        - "Savings rate"
+      
+      trend_analysis:
+        - "Monthly comparison"
+        - "Year-over-year growth"
+        - "Category spending trends"
+        - "Income stability"
+    
+    financial_health_metrics:
+      debt_to_income: "total monthly debt / monthly income"
+      savings_rate: "monthly savings / monthly income"
+      emergency_fund_ratio: "emergency fund / monthly expenses"
+      net_worth_growth: "assets - liabilities over time"
+
+finance_templates:
+  expense_entry:
+    format: |
+      ## 💰 Expense - {{date}}
+      
+      - **Amount:** {{amount}}
+      - **Category:** {{category}}
+      - **Description:** {{description}}
+      - **Payment:** {{payment_method}}
+      - **Budget Impact:** {{budget_remaining}} remaining in {{category}}
+      
+      #finance #expense #{{category}}
+      
+  monthly_budget_report:
+    format: |
+      ## 📊 Monthly Budget Report - {{month}}
+      
+      ### Income
+      - **Total Income:** {{total_income}}
+      - **Primary:** {{primary_income}}
+      - **Other:** {{other_income}}
+      
+      ### Expenses by Category
+      {{expense_breakdown}}
+      
+      ### Budget Performance
+      - **Total Spent:** {{total_spent}} / {{total_budget}}
+      - **Remaining:** {{budget_remaining}}
+      - **Savings Rate:** {{savings_rate}}%
+      
+      ### Category Analysis
+      {{category_analysis}}
+      
+      ### Goals Progress
+      {{goals_progress}}
+      
+      #finance #monthly-report #{{month}}
+      
+  goal_progress_update:
+    format: |
+      ## 🎯 Goal Progress - {{goal_name}}
+      
+      - **Target:** {{target_amount}}
+      - **Current:** {{current_amount}} ({{progress_percent}}%)
+      - **Remaining:** {{remaining_amount}}
+      - **Timeline:** {{timeline_status}}
+      - **Monthly Need:** {{monthly_contribution_needed}}
+      
+      ### Progress Chart
+      {{progress_visualization}}
+      
+      #finance #goal #{{goal_tag}}
+
+budget_categories:
+  housing:
+    subcategories: ["rent/mortgage", "utilities", "maintenance", "insurance"]
+    typical_percentage: "25-30%"
+    
+  transportation:
+    subcategories: ["car payment", "gas", "insurance", "maintenance", "public transport"]
+    typical_percentage: "10-15%"
+    
+  food:
+    subcategories: ["groceries", "dining out", "work lunches"]
+    typical_percentage: "10-15%"
+    
+  savings:
+    subcategories: ["emergency fund", "retirement", "goals"]
+    typical_percentage: "20%"
+    
+  entertainment:
+    subcategories: ["subscriptions", "activities", "hobbies"]
+    typical_percentage: "5-10%"
+
+integration_patterns:
+  goal_agent:
+    - "Sync financial goals with overall life goals"
+    - "Track goal progress and milestones"
+    - "Adjust timelines based on financial reality"
+    - "Celebrate financial achievements"
+  
+  task_agent:
+    - "Create tasks for bill payments"
+    - "Schedule budget review sessions"
+    - "Set reminders for investment contributions"
+    - "Plan financial goal activities"
+  
+  health_agent:
+    - "Track health-related expenses"
+    - "Monitor stress related to finances"
+    - "Plan health budget allocations"
+
+financial_insights:
+  spending_analysis:
+    patterns:
+      - "Weekly spending rhythms"
+      - "Monthly expense cycles"
+      - "Seasonal variations"
+      - "Emotional spending triggers"
+    
+    optimizations:
+      - "Category reallocation suggestions"
+      - "Subscription audit recommendations"
+      - "Cost-cutting opportunities"
+      - "Income increase strategies"
+  
+  goal_optimization:
+    strategies:
+      - "Contribution timing optimization"
+      - "Goal priority rebalancing"
+      - "Timeline adjustment recommendations"
+      - "Additional income allocation"
+
+output_formats:
+  expense_logged:
+    format: |
+      💰 Expense logged: {{amount}} for {{category}}
+      📊 Category: {{spent}}/{{budget}} ({{remaining}} left)
+      📈 Monthly total: {{monthly_total}}
+      🎯 Savings rate: {{savings_rate}}% this month
+      
+  budget_alert:
+    format: |
+      ⚠️ Budget Alert: {{category}}
+      📊 Spent: {{spent}}/{{budget}} ({{percentage}}%)
+      💡 {{days_remaining}} days left in month
+      📈 Daily average needed: {{daily_average}}
+      
+  goal_milestone:
+    format: |
+      🎉 Goal Milestone: {{goal_name}}
+      🎯 Reached {{milestone}}% ({{current_amount}})
+      📈 Progress: +{{progress_increase}} this month
+      ⏱️ Timeline: {{timeline_status}}
+      🚀 Next milestone: {{next_milestone}} ({{amount_needed}} to go)
+      
+  monthly_summary:
+    format: |
+      📊 Monthly Finance Summary - {{month}}
+      💰 Income: {{total_income}} | Expenses: {{total_expenses}}
+      💵 Net: {{net_income}} | Savings Rate: {{savings_rate}}%
+      🎯 Goals: {{goals_on_track}}/{{total_goals}} on track
+      📈 Best category: {{best_category}} (under budget)
+      ⚠️ Watch: {{watch_category}} (over budget)
+      💡 Insight: {{key_insight}}

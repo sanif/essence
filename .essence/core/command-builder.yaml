@@ -1,0 +1,136 @@
+name: "Command Builder"
+type: utility
+extends: base-command
+version: 1.0
+description: "Compose complex commands from simple components"
+tags: [core, utility, composition]
+
+purpose: "Build complex commands by composing simpler agents and workflows. Enables command reuse and powerful combinations."
+
+composition_patterns:
+  sequential:
+    description: "Chain commands where output of one feeds into the next"
+    example: "daily-planning → task-creation → reminder-setup → health-check"
+    
+  parallel:
+    description: "Execute multiple commands simultaneously"
+    example: |
+      morning-routine: {
+        health-check,
+        calendar-review, 
+        inbox-process
+      } → daily-summary
+    
+  conditional:
+    description: "Execute commands based on conditions"
+    examples:
+      - "if (weekday) → work-focus"
+      - "if (weekend) → personal-projects"
+      - "if (health-day) → wellness-routine"
+
+builder_syntax:
+  basic_chain:
+    format: "yaml"
+    structure:
+      workflow:
+        - command: "command-name"
+          args: ["argument1", "argument2"]
+        - command: "next-command"
+          context: "context-data"
+        - command: "final-command"
+          args: ["data from #{previous.output}"]
+  
+  conditional_execution:
+    format: "yaml"
+    structure:
+      conditions:
+        - if: "condition expression"
+          then: "command-to-execute"
+        - if: "another condition"
+          then: "another-command"
+        - default: "default-command"
+  
+  context_passing:
+    format: "yaml"
+    structure:
+      context_flow:
+        variable_name: "#{command.output.field}"
+        another_variable: "#{other-command.output.data}"
+        summary: "Combined data: #{variable_name} and #{another_variable}"
+
+reusable_components:
+  morning_routine:
+    pre_check: "check-daily-note"
+    parallel:
+      - health-agent: "quick-checkin"
+      - calendar-agent: "today-overview"
+      - habit-agent: "morning-habits"
+    post_process: "daily-summary"
+  
+  evening_routine:
+    sequence:
+      - task-agent: "review-completed"
+      - reflect-agent: "day-reflection"
+      - health-agent: "evening-metrics"
+      - habit-agent: "habit-tracking"
+    output: "tomorrow-prep"
+  
+  project_workflow:
+    init: "create-project-note"
+    planning:
+      - goal-agent: "define-objectives"
+      - task-agent: "break-down-work"
+    execution:
+      daily: "task-progress"
+      weekly: "project-review"
+    completion: "project-retrospective"
+
+advanced_features:
+  dynamic_arguments:
+    description: "Commands can accept computed arguments"
+    examples:
+      title: "#{capture-agent.output.summary}"
+      due: "#{calendar-agent.next-free-slot}"
+      priority: "#{context.urgency-level}"
+  
+  error_handling:
+    retry: 3
+    fallback: "manual-entry-prompt"
+    notify: "log-to-daily-note"
+    
+  performance_optimization:
+    cache: "daily-context"
+    parallel: "non-dependent-commands"
+    lazy_load: "expensive-operations"
+
+composition_rules:
+  context_preservation:
+    - "Maintain context across command chain"
+    - "Pass relevant data between commands"
+    - "Handle context conflicts gracefully"
+  
+  error_propagation:
+    - "Handle command failures appropriately"
+    - "Provide meaningful error messages"
+    - "Implement fallback strategies"
+  
+  resource_management:
+    - "Optimize parallel execution"
+    - "Cache reusable computations"
+    - "Manage memory and performance"
+
+integration_patterns:
+  agent_chaining:
+    - "task-agent → health-agent → review-agent"
+    - "capture-agent → processing → organization"
+    - "planning → execution → reflection"
+  
+  workflow_orchestration:
+    - "Morning: parallel health/calendar/habits → summary"
+    - "Evening: sequential tasks/reflection/prep"
+    - "Weekly: analysis → planning → optimization"
+  
+  conditional_routing:
+    - "Route based on day of week"
+    - "Route based on user state/energy"
+    - "Route based on context/environment"

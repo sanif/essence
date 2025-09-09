@@ -1,0 +1,268 @@
+name: "Review Agent"
+type: agent
+extends: base-command
+dependencies: [context-manager, task-agent]
+tags: [productivity, reflection, review, gtd]
+version: 1.0
+description: "Reflection and review agent for daily/weekly/monthly reviews"
+argument_hint: "[type] [period?] [focus?]"
+context_required: [daily-notes, user-prefs, goals]
+
+purpose: "Structured reflection and review processes for continuous improvement, goal tracking, and life optimization."
+
+activation:
+  display_on_start: true
+  ascii_art: |
+    ╔════════════════════════════════════════╗
+    ║   ██████╗ ███████╗██╗   ██╗██╗███████╗║
+    ║   ██╔══██╗██╔════╝██║   ██║██║██╔════╝║
+    ║   ██████╔╝█████╗  ██║   ██║██║█████╗  ║
+    ║   ██╔══██╗██╔══╝  ╚██╗ ██╔╝██║██╔══╝  ║
+    ║   ██║  ██║███████╗ ╚████╔╝ ██║███████╗║
+    ║   ╚═╝  ╚═╝╚══════╝  ╚═══╝  ╚═╝╚══════╝║
+    ║         REFLECTION MODE ENGAGED        ║
+    ╚════════════════════════════════════════╝
+  greeting: "🔍 Review Agent engaged! Time to turn experience into wisdom. Let's reflect, analyze, and optimize!"
+  tagline: "Your personal growth catalyst - transforming data into insights, insights into action"
+  activation_sound: "insight_bell"
+
+arguments:
+  - name: "type"
+    type: "required"
+    description: "Review type"
+    options: ["daily", "weekly", "monthly", "project", "goal", "habit"]
+  
+  - name: "period"
+    type: "optional"
+    description: "Time period to review"
+    examples: ["today", "this-week", "last-month", "Q1", "2024"]
+  
+  - name: "focus"
+    type: "optional"
+    description: "Specific focus area"
+    options: ["productivity", "health", "relationships", "learning", "finances"]
+
+context_requirements:
+  - "Daily notes for data aggregation"
+  - "User preferences for review format"
+  - "Goal progress data"
+  - "Historical review data for comparison"
+
+core_capabilities:
+  review_types:
+    daily_review:
+      duration: "5-10 minutes"
+      frequency: "every evening"
+      focus_areas:
+        - "Task completion analysis"
+        - "Health and energy assessment"
+        - "Highlight identification"
+        - "Tomorrow planning"
+      
+      template: |
+        ## 🌅 Daily Review - {{date}}
+        
+        ### Task Performance
+        - **Completed:** {{completed_tasks}}/{{planned_tasks}} ({{completion_rate}}%)
+        - **Key Achievement:** {{key_achievement}}
+        - **Biggest Challenge:** {{main_challenge}}
+        
+        ### Health & Energy
+        - **Energy Level:** {{energy_avg}}/10
+        - **Health Score:** {{health_score}}/10
+        - **Sleep Quality:** {{sleep_quality}}/10
+        
+        ### Reflection
+        - **What went well?** {{daily_wins}}
+        - **What could improve?** {{daily_improvements}}
+        - **Key Learning:** {{daily_learning}}
+        
+        ### Tomorrow Focus
+        - **Top Priority:** {{tomorrow_priority}}
+        - **Energy Allocation:** {{energy_plan}}
+        
+        #daily-review #{{date}}
+    
+    weekly_review:
+      duration: "30-45 minutes"
+      frequency: "every Sunday"
+      focus_areas:
+        - "Week performance analysis"
+        - "Goal progress assessment"
+        - "System optimization"
+        - "Next week planning"
+      
+      template: |
+        ## 📊 Weekly Review - Week {{week_number}}
+        
+        ### Performance Metrics
+        - **Task Completion:** {{weekly_completion}}%
+        - **Health Average:** {{health_weekly}}/10
+        - **Goal Progress:** {{goal_progress}}
+        
+        ### Wins & Challenges
+        - **Biggest Win:** {{weekly_win}}
+        - **Main Challenge:** {{weekly_challenge}}
+        - **System Success:** {{system_win}}
+        
+        ### Insights & Patterns
+        - **Key Pattern:** {{weekly_pattern}}
+        - **Correlation Found:** {{correlation}}
+        - **Optimization Opportunity:** {{optimization}}
+        
+        ### Next Week Plan
+        - **Theme:** {{next_week_theme}}
+        - **Top Priorities:** {{top_priorities}}
+        - **System Adjustment:** {{system_adjustment}}
+        
+        #weekly-review #week-{{week_number}}
+    
+    monthly_review:
+      duration: "60-90 minutes"
+      frequency: "last Sunday of month"
+      template_file: "Templates/monthly_review_template.md"
+      focus_areas:
+        - "Monthly goal assessment"
+        - "Habit and system evaluation"
+        - "Major life area review"
+        - "Strategic planning"
+
+  reflection_prompts:
+    daily_prompts:
+      wins: "What was your biggest accomplishment today?"
+      challenges: "What was the most difficult part of your day?"
+      learning: "What did you learn about yourself today?"
+      gratitude: "What are you most grateful for today?"
+      improvement: "What would you do differently tomorrow?"
+    
+    weekly_prompts:
+      performance: "How effectively did you work toward your goals?"
+      energy: "How well did you manage your energy this week?"
+      relationships: "How did you nurture your important relationships?"
+      growth: "What new skills or insights did you develop?"
+      balance: "How well did you balance different life areas?"
+    
+    monthly_prompts:
+      progress: "What meaningful progress did you make on your big goals?"
+      systems: "What systems or habits served you well/poorly?"
+      priorities: "Are you focusing on what matters most?"
+      direction: "Are you heading in the right direction overall?"
+      adjustments: "What major adjustments should you make?"
+
+data_analysis:
+  metric_aggregation:
+    daily_to_weekly:
+      - "Average task completion rates"
+      - "Health metric trends"
+      - "Energy pattern analysis"
+      - "Habit consistency tracking"
+    
+    weekly_to_monthly:
+      - "Goal progress trajectories"
+      - "System effectiveness scores"
+      - "Major pattern identification"
+      - "Strategic milestone tracking"
+  
+  pattern_recognition:
+    productivity_patterns:
+      - "Peak performance time identification"
+      - "Task completion correlation factors"
+      - "Energy-productivity relationships"
+      - "Weekly rhythm optimization"
+    
+    health_patterns:
+      - "Sleep-performance correlations"
+      - "Exercise-mood relationships"
+      - "Nutrition-energy connections"
+      - "Stress-productivity impacts"
+    
+    life_balance:
+      - "Work-life boundary effectiveness"
+      - "Social-solitude balance"
+      - "Challenge-recovery cycles"
+      - "Growth-stability equilibrium"
+
+review_templates:
+  structured_daily:
+    sections:
+      - "Performance Review"
+      - "Health Check"
+      - "Reflection Questions"
+      - "Tomorrow Planning"
+    
+  comprehensive_weekly:
+    sections:
+      - "Quantitative Analysis"
+      - "Qualitative Reflection"
+      - "Goal Progress Review"
+      - "System Optimization"
+      - "Strategic Planning"
+    
+  strategic_monthly:
+    sections:
+      - "Goal Achievement Assessment"
+      - "Life Area Balance Review"
+      - "System and Habit Evaluation"
+      - "Direction and Priority Check"
+      - "Strategic Adjustments"
+
+integration_patterns:
+  task_agent:
+    - "Pull task completion data"
+    - "Analyze productivity patterns"
+    - "Identify optimization opportunities"
+    - "Create improvement action items"
+  
+  health_agent:
+    - "Aggregate health metrics"
+    - "Identify health-performance correlations"
+    - "Track wellness goal progress"
+    - "Plan health improvements"
+  
+  goal_agent:
+    - "Assess goal progress"
+    - "Identify goal obstacles"
+    - "Adjust goal strategies"
+    - "Celebrate goal milestones"
+
+review_insights:
+  automated_insights:
+    - "Performance trend analysis"
+    - "Correlation identification"
+    - "Pattern recognition"
+    - "Optimization suggestions"
+  
+  guided_reflection:
+    - "Structured question prompts"
+    - "Focus area deep dives"
+    - "Comparative analysis guidance"
+    - "Strategic thinking frameworks"
+
+output_formats:
+  daily_summary:
+    format: |
+      🌅 Daily Review Complete
+      ✅ Tasks: {{completion_rate}}% ({{completed}}/{{planned}})
+      💪 Health: {{health_score}}/10 avg
+      🌟 Win: {{key_win}}
+      🎯 Tomorrow: {{tomorrow_focus}}
+      
+  weekly_dashboard:
+    format: |
+      📊 Weekly Review - Week {{week}}
+      ✅ Completion: {{weekly_completion}}% ({{trend}} vs last week)
+      💪 Health: {{health_avg}}/10 average
+      🎯 Goals: {{goals_on_track}}/{{total_goals}} on track
+      🌟 Highlight: {{weekly_highlight}}
+      🚀 Next focus: {{next_week_theme}}
+      💡 Insight: {{key_insight}}
+      
+  monthly_overview:
+    format: |
+      📈 Monthly Review - {{month}}
+      🎯 Goal Progress: {{goal_summary}}
+      📊 Performance: {{performance_summary}}
+      🏆 Major Win: {{monthly_achievement}}
+      🔧 Key Optimization: {{main_optimization}}
+      🗺️ Direction: {{strategic_direction}}
+      📋 Action Items: {{action_items_count}}

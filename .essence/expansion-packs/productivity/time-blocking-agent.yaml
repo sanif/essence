@@ -1,0 +1,282 @@
+name: "Time Blocking Agent"
+type: expansion
+extends: base-command
+dependencies: [task-agent, focus-agent, context-manager]
+tags: [productivity, time-management, scheduling, planning]
+version: 1.0
+description: "Advanced time blocking and calendar optimization agent"
+argument_hint: "[action] [time-block?] [priority?]"
+context_required: [calendar, energy-patterns, task-priorities]
+
+purpose: "Intelligent time blocking system that optimizes schedule allocation based on energy patterns, task complexity, and priority management for maximum productivity and life balance."
+
+arguments:
+  - name: "action"
+    type: "required" 
+    description: "Time blocking action"
+    options: ["plan", "block", "optimize", "analyze", "protect"]
+  
+  - name: "time_block"
+    type: "optional"
+    description: "Specific time period"
+    examples: ["9-11am", "afternoon", "Monday-morning", "deep-work-hours"]
+  
+  - name: "priority"
+    type: "optional"
+    description: "Priority level for block"
+    options: ["urgent", "important", "routine", "creative", "administrative"]
+
+context_requirements:
+  - "Calendar access for scheduling"
+  - "Energy patterns and peak performance times"
+  - "Task priorities and complexity estimates"
+  - "Meeting and appointment constraints"
+
+core_capabilities:
+  time_block_types:
+    deep_work_blocks:
+      duration: "90-120 minutes"
+      optimal_times: ["9-11am", "2-4pm"]
+      energy_requirement: "high"
+      interruption_policy: "none"
+      task_types: ["complex", "creative", "analytical"]
+      
+    administrative_blocks:
+      duration: "30-60 minutes"
+      optimal_times: ["after lunch", "end of day"]
+      energy_requirement: "medium"
+      interruption_policy: "limited"
+      task_types: ["email", "planning", "organizing"]
+      
+    creative_blocks:
+      duration: "60-90 minutes"
+      optimal_times: ["morning", "quiet hours"]
+      energy_requirement: "high"
+      interruption_policy: "none"
+      task_types: ["brainstorming", "design", "writing"]
+      
+    routine_blocks:
+      duration: "15-30 minutes"
+      optimal_times: ["between meetings", "transition times"]
+      energy_requirement: "low"
+      interruption_policy: "flexible"
+      task_types: ["quick tasks", "follow-ups", "maintenance"]
+
+  schedule_optimization:
+    energy_matching:
+      high_energy_tasks:
+        - "Complex problem solving"
+        - "Creative work"
+        - "Important decisions"
+        - "Learning new skills"
+        
+      medium_energy_tasks:
+        - "Meetings and calls"
+        - "Administrative work"
+        - "Email processing"
+        - "Planning sessions"
+        
+      low_energy_tasks:
+        - "Routine maintenance"
+        - "Data entry"
+        - "Organization"
+        - "Light reading"
+    
+    calendar_integration:
+      conflict_detection: "Check for overlapping appointments"
+      buffer_management: "Add transition time between blocks"
+      meeting_optimization: "Batch meetings when possible"
+      protection_zones: "Block important work time"
+
+  blocking_strategies:
+    theme_days:
+      monday: "Planning and strategy"
+      tuesday: "Deep work and creation"
+      wednesday: "Meetings and collaboration"
+      thursday: "Deep work and execution"
+      friday: "Review and preparation"
+      
+    energy_zones:
+      peak_morning: "Most important and complex work"
+      steady_midday: "Meetings and collaborative work"
+      afternoon_dip: "Routine and administrative tasks"
+      second_wind: "Creative or focused work"
+      evening: "Planning and light tasks"
+      
+    context_batching:
+      communication: "All emails/calls in designated blocks"
+      creative: "All creative work in optimal time slots"
+      administrative: "All admin tasks batched together"
+      learning: "All learning/development in focused blocks"
+
+time_blocking_templates:
+  daily_time_block:
+    format: |
+      ## ⏰ Time Blocks - {{date}}
+      
+      ### Morning Block ({{morning_time}})
+      **Type:** {{morning_type}}
+      **Tasks:** {{morning_tasks}}
+      **Energy:** {{morning_energy}}/10
+      **Environment:** {{morning_environment}}
+      
+      ### Midday Block ({{midday_time}})
+      **Type:** {{midday_type}}
+      **Tasks:** {{midday_tasks}}
+      **Energy:** {{midday_energy}}/10
+      
+      ### Afternoon Block ({{afternoon_time}})
+      **Type:** {{afternoon_type}}
+      **Tasks:** {{afternoon_tasks}}
+      **Energy:** {{afternoon_energy}}/10
+      
+      ### Buffer Times
+      - {{buffer_1}}: {{buffer_purpose_1}}
+      - {{buffer_2}}: {{buffer_purpose_2}}
+      
+      #time-blocking #{{date}}
+      
+  weekly_time_architecture:
+    format: |
+      ## 🗓️ Weekly Time Architecture - Week {{week_number}}
+      
+      ### Theme Distribution
+      - **Monday:** {{monday_theme}} ({{monday_hours}}h)
+      - **Tuesday:** {{tuesday_theme}} ({{tuesday_hours}}h)
+      - **Wednesday:** {{wednesday_theme}} ({{wednesday_hours}}h)
+      - **Thursday:** {{thursday_theme}} ({{thursday_hours}}h)
+      - **Friday:** {{friday_theme}} ({{friday_hours}}h)
+      
+      ### Deep Work Allocation
+      **Total Deep Work:** {{deep_work_hours}}h
+      **Best Times:** {{optimal_deep_work_times}}
+      **Protected Blocks:** {{protected_blocks}}
+      
+      ### Meeting Strategy
+      **Meeting Days:** {{meeting_days}}
+      **Max Daily Meetings:** {{max_meetings}}
+      **Buffer Between:** {{meeting_buffers}}
+      
+      ### Energy Management
+      **Peak Energy Tasks:** {{peak_energy_allocation}}
+      **Medium Energy Tasks:** {{medium_energy_allocation}}
+      **Low Energy Tasks:** {{low_energy_allocation}}
+      
+      #time-blocking #weekly #week-{{week_number}}
+
+  time_block_analysis:
+    format: |
+      ## 📊 Time Block Analysis - {{period}}
+      
+      ### Utilization
+      - **Deep Work:** {{deep_work_actual}}/{{deep_work_planned}}h ({{deep_work_percentage}}%)
+      - **Meetings:** {{meetings_actual}}/{{meetings_planned}}h
+      - **Admin:** {{admin_actual}}/{{admin_planned}}h
+      
+      ### Effectiveness
+      - **Block Completion:** {{block_completion_rate}}%
+      - **Energy Match:** {{energy_match_score}}/10
+      - **Interruption Rate:** {{interruption_rate}}%
+      
+      ### Insights
+      - **Most Productive Block:** {{most_productive}}
+      - **Least Effective Block:** {{least_effective}}
+      - **Optimization Opportunity:** {{optimization}}
+      
+      #time-blocking #analysis
+
+advanced_features:
+  adaptive_scheduling:
+    energy_tracking:
+      - "Monitor actual vs predicted energy levels"
+      - "Learn individual energy patterns"
+      - "Adjust block timing based on performance"
+      - "Account for sleep and health factors"
+    
+    performance_optimization:
+      - "Track task completion within blocks"
+      - "Measure focus quality during different times"
+      - "Optimize block duration based on outcomes"
+      - "Adjust for seasonal and life changes"
+    
+    intelligent_rescheduling:
+      - "Automatically suggest reschedule options"
+      - "Prioritize critical blocks for protection"
+      - "Balance workload across the week"
+      - "Account for external constraints"
+
+  calendar_protection:
+    focus_time_protection:
+      rules:
+        - "Block 2-hour morning focus blocks"
+        - "Protect Tuesday/Thursday deep work"
+        - "Limit meetings to 3 per day max"
+        - "Maintain 15min buffers between meetings"
+    
+    interruption_management:
+      strategies:
+        - "Schedule open-door hours"
+        - "Batch all communications"
+        - "Create urgent vs non-urgent protocols"
+        - "Use visual cues for focus time"
+
+integration_patterns:
+  task_agent:
+    - "Estimate time requirements for tasks"
+    - "Schedule tasks in appropriate time blocks"
+    - "Track actual vs estimated completion times"
+    - "Optimize task batching strategies"
+    
+  focus_agent:
+    - "Align time blocks with focus modes"
+    - "Optimize block duration for sustained attention"
+    - "Schedule breaks and recovery time"
+    - "Track focus quality across different blocks"
+    
+  health_agent:
+    - "Consider energy levels for block scheduling"
+    - "Account for sleep patterns in time allocation"
+    - "Schedule health activities in optimal slots"
+    - "Monitor stress impact of schedule density"
+
+blocking_rules:
+  core_principles:
+    - "Match task complexity to energy levels"
+    - "Batch similar work to reduce context switching"
+    - "Protect high-value work with buffer time"
+    - "Leave flexibility for unexpected priorities"
+    - "Balance focused work with collaborative time"
+    
+  time_allocation:
+    deep_work: "40% of available work time"
+    meetings: "25% of available work time"
+    administrative: "20% of available work time"
+    buffer_time: "15% for transitions and unexpected"
+
+output_formats:
+  time_block_created:
+    format: |
+      ⏰ Time block created: {{block_type}}
+      🕐 Time: {{start_time}} - {{end_time}} ({{duration}})
+      🎯 Focus: {{block_purpose}}
+      ⚡ Energy: {{energy_requirement}}
+      🛡️ Protection: {{interruption_policy}}
+      
+  schedule_optimized:
+    format: |
+      🎯 Schedule optimized for {{date}}
+      ⚡ Energy alignment: {{energy_score}}/10
+      🏆 Deep work protected: {{deep_work_hours}}h
+      📅 Meeting efficiency: {{meeting_efficiency}}%
+      ⏱️ Buffer time: {{buffer_percentage}}%
+      💡 Key optimization: {{main_optimization}}
+      
+  weekly_architecture:
+    format: |
+      🗓️ Weekly Time Architecture - Week {{week}}
+      🎯 Total planned: {{total_planned}}h
+      ⚡ Deep work: {{deep_work_hours}}h ({{deep_work_percentage}}%)
+      👥 Collaboration: {{collaboration_hours}}h
+      🔧 Admin: {{admin_hours}}h
+      📊 Energy match: {{energy_alignment}}/10
+      🛡️ Focus protection: {{protection_score}}/10

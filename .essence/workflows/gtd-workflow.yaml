@@ -1,0 +1,389 @@
+name: "GTD Workflow"
+type: workflow
+extends: base-command
+dependencies: [capture-agent, task-agent, review-agent, context-manager]
+tags: [productivity, gtd, workflow, organization]
+version: 1.0
+description: "Getting Things Done (GTD) methodology workflow implementation"
+argument_hint: "[phase] [context?]"
+context_required: [inbox, projects, contexts, someday-maybe]
+
+purpose: "Implementation of David Allen's Getting Things Done methodology through integrated agent workflows for comprehensive personal productivity management."
+
+arguments:
+  - name: "phase"
+    type: "required"
+    description: "GTD phase to execute"
+    options: ["capture", "clarify", "organize", "reflect", "engage"]
+  
+  - name: "context"
+    type: "optional"
+    description: "GTD context filter"
+    options: ["@calls", "@computer", "@errands", "@home", "@office", "@waiting", "@someday"]
+
+context_requirements:
+  - "Inbox for capture and processing"
+  - "Project list and active projects"
+  - "Context lists for different environments"
+  - "Someday/Maybe list for future considerations"
+
+gtd_phases:
+  capture:
+    description: "Collect everything that has your attention"
+    duration: "ongoing throughout day"
+    tools:
+      - "Universal capture system"
+      - "Multiple capture points"
+      - "Quick entry methods"
+      - "Voice recordings, notes, emails"
+    
+    workflow:
+      1:
+        step: "identify_input"
+        action: "recognize something needs attention"
+        trigger: "thought, idea, commitment, request"
+      
+      2:
+        step: "capture_immediately"
+        agent: "capture-agent"
+        action: "record in trusted system"
+        principle: "don't let it stay in your head"
+      
+      3:
+        step: "continue_focus"
+        action: "return to current activity"
+        benefit: "maintain concentration"
+    
+    capture_triggers:
+      - "Random thoughts during work"
+      - "Ideas during conversations"
+      - "Commitments made to others"
+      - "Things noticed that need attention"
+      - "Information that might be useful later"
+    
+    template: |
+      # 📥 Capture - {{timestamp}}
+      
+      **Input:** {{captured_content}}
+      **Source:** {{capture_source}}
+      **Type:** {{content_type}}
+      **Context:** {{current_context}}
+      
+      **Status:** Captured (needs processing)
+      
+      #gtd #capture #inbox
+
+  clarify:
+    description: "Process what it means and what action is required"
+    duration: "dedicated processing sessions"
+    frequency: "daily or every few days"
+    
+    decision_tree:
+      is_actionable:
+        yes:
+          next_actions:
+            less_than_2min: "do it now"
+            delegate: "waiting for list"
+            defer: "next actions list or calendar"
+          multiple_steps: "project with next action"
+        no:
+          options:
+            reference: "file in reference system"
+            someday_maybe: "add to someday/maybe list"
+            trash: "delete if not useful"
+    
+    clarification_questions:
+      - "What is this thing exactly?"
+      - "Is it actionable?"
+      - "If actionable, what's the next physical action?"
+      - "If multiple actions, what's the desired outcome (project)?"
+      - "If not actionable, is it reference material or trash?"
+    
+    template: |
+      # 🤔 Clarify - {{item_title}}
+      
+      **Original Input:** {{original_capture}}
+      **Captured:** {{capture_date}}
+      
+      ## Clarification
+      **What is it?** {{clarified_meaning}}
+      **Actionable?** {{is_actionable}}
+      
+      {{#if is_actionable}}
+      ## Action Required
+      **Next Action:** {{next_action}}
+      **Time Required:** {{time_estimate}}
+      **Context:** {{action_context}}
+      {{#if is_project}}
+      **Project:** {{project_name}}
+      **Outcome:** {{desired_outcome}}
+      {{/if}}
+      {{else}}
+      ## No Action
+      **Category:** {{category}} (reference/someday/trash)
+      **Filing:** {{filing_location}}
+      {{/if}}
+      
+      **Status:** Clarified
+      
+      #gtd #clarify #processed
+
+  organize:
+    description: "Put reminders in the right places"
+    focus: "organizing action reminders by context and timeline"
+    
+    organization_system:
+      projects_list:
+        definition: "outcomes requiring more than one action"
+        review_frequency: "weekly"
+        format: "desired outcome statement"
+        examples:
+          - "Complete kitchen renovation"
+          - "Launch new website"
+          - "Plan summer vacation"
+      
+      next_actions_lists:
+        contexts:
+          calls: "@calls - phone calls to make"
+          computer: "@computer - tasks requiring computer"
+          errands: "@errands - things to do when out"
+          home: "@home - actions at home"
+          office: "@office - workplace actions"
+          agenda: "@agenda/person - items to discuss"
+        
+        principles:
+          - "Physical, visible next action"
+          - "Organized by context (where/when)"
+          - "Regularly reviewed and updated"
+      
+      waiting_for:
+        description: "things you're waiting for others to do"
+        tracking: "what, who, when requested"
+        review: "weekly to follow up"
+      
+      calendar:
+        day_specific: "appointments and meetings"
+        time_specific: "actions that must be done on specific day"
+        avoid: "tasks that could be done anytime"
+      
+      someday_maybe:
+        description: "things you might want to do someday"
+        examples: "learn Spanish, visit Japan, write book"
+        review: "weekly during review"
+    
+    organization_template: |
+      # 📂 GTD Organization - {{date}}
+      
+      ## Projects ({{project_count}})
+      {{#each projects}}
+      - {{name}} - Next: {{next_action}}
+      {{/each}}
+      
+      ## Next Actions by Context
+      ### @Calls ({{calls_count}})
+      {{calls_list}}
+      
+      ### @Computer ({{computer_count}})
+      {{computer_list}}
+      
+      ### @Errands ({{errands_count}})
+      {{errands_list}}
+      
+      ### @Home ({{home_count}})
+      {{home_list}}
+      
+      ### @Office ({{office_count}})
+      {{office_list}}
+      
+      ## Waiting For ({{waiting_count}})
+      {{waiting_list}}
+      
+      ## Calendar - Next 7 Days
+      {{upcoming_calendar}}
+      
+      ## Someday/Maybe ({{someday_count}})
+      {{someday_list}}
+      
+      #gtd #organize #system
+
+  reflect:
+    description: "Review the system to regain control and focus"
+    types:
+      daily_minisweep:
+        duration: "5-10 minutes"
+        focus: "collect loose items, empty capture tools"
+        actions:
+          - "Empty physical inboxes"
+          - "Process quick captures"
+          - "Update action lists"
+          - "Check calendar for tomorrow"
+      
+      weekly_review:
+        duration: "30-60 minutes"
+        timing: "same time each week"
+        comprehensive: "full system review and update"
+        
+        weekly_review_steps:
+          1: "Collect loose papers and materials"
+          2: "Get 'in' to zero"
+          3: "Empty your head - brain dump"
+          4: "Review action lists"
+          5: "Review previous calendar data"
+          6: "Review upcoming calendar"
+          7: "Review waiting for list"
+          8: "Review project list"
+          9: "Review someday/maybe list"
+    
+    weekly_review_template: |
+      # 🔄 Weekly Review - Week {{week_number}}
+      
+      **Date:** {{date}}
+      **Duration:** {{review_duration}}
+      
+      ## Collection Phase
+      - [ ] Physical inbox emptied
+      - [ ] Digital inbox processed
+      - [ ] Loose papers collected
+      - [ ] Brain dump completed
+      
+      ## Review Phase
+      ### Action Lists Review
+      {{action_lists_review}}
+      
+      ### Calendar Review
+      **Last Week:** {{last_week_review}}
+      **Next Week:** {{next_week_preview}}
+      
+      ### Projects Review
+      {{projects_status_update}}
+      
+      ### Waiting For Review
+      {{waiting_for_followups}}
+      
+      ### Someday/Maybe Review
+      {{someday_maybe_updates}}
+      
+      ## Updates Made
+      {{system_updates}}
+      
+      ## Focus for Next Week
+      {{next_week_priorities}}
+      
+      #gtd #weekly-review #week-{{week_number}}
+
+  engage:
+    description: "Choose actions with confidence"
+    decision_factors:
+      context: "where am I and what tools are available?"
+      time_available: "how much time do I have?"
+      energy_level: "what's my current mental/physical energy?"
+      priority: "what's most important right now?"
+    
+    engagement_modes:
+      context_based:
+        description: "choose based on current context"
+        example: "at computer → work on @computer list"
+        
+      time_based:
+        description: "choose based on available time"
+        examples:
+          - "5 minutes → quick calls or emails"
+          - "30 minutes → focused work session"
+          - "2 hours → project advancement"
+      
+      energy_based:
+        description: "match tasks to energy level"
+        examples:
+          - "high energy → creative or complex work"
+          - "medium energy → administrative tasks"
+          - "low energy → organizing or simple tasks"
+      
+      priority_based:
+        description: "focus on most important outcomes"
+        tools: "project priorities, deadline considerations"
+
+gtd_tools_integration:
+  capture_tools:
+    physical:
+      - "Notebooks and capture cards"
+      - "Voice recorder for mobile capture"
+      - "Physical inbox for papers"
+    
+    digital:
+      - "Mobile apps for quick capture"
+      - "Email for structured input"
+      - "Digital note-taking systems"
+  
+  organization_tools:
+    lists: "context-based action lists"
+    calendar: "time and date specific items"
+    reference: "organized information system"
+    filing: "project support materials"
+
+gtd_best_practices:
+  capture_habits:
+    - "Always have capture tool available"
+    - "Don't judge or process during capture"
+    - "Empty capture tools regularly"
+    - "Trust the system completely"
+  
+  processing_principles:
+    - "Process from top, one item at a time"
+    - "Never put anything back in inbox"
+    - "Use 2-minute rule consistently"
+    - "Define next actions clearly"
+  
+  review_discipline:
+    - "Weekly review is non-negotiable"
+    - "Keep system current and trusted"
+    - "Regular maintenance prevents breakdown"
+    - "Adjust system based on what works"
+
+integration_patterns:
+  capture_agent:
+    - "Universal capture system implementation"
+    - "Multiple input methods supported"
+    - "Automatic inbox management"
+    - "Processing workflow automation"
+  
+  task_agent:
+    - "Next actions list management"
+    - "Context-based task organization"
+    - "Project tracking and coordination"
+    - "Time and energy estimation"
+  
+  review_agent:
+    - "Weekly review facilitation"
+    - "System health monitoring"
+    - "Productivity pattern analysis"
+    - "Continuous improvement insights"
+
+output_formats:
+  capture_complete:
+    format: |
+      📥 Captured: {{item_title}}
+      📍 Location: {{inbox_location}}
+      ⏰ Time: {{capture_time}}
+      🔄 Status: Needs processing
+      📊 Inbox: {{inbox_count}} items total
+      
+  processing_session:
+    format: |
+      🤔 Processing Session Complete
+      📥 Items processed: {{processed_count}}
+      ✅ Actions created: {{actions_created}}
+      📁 Reference filed: {{reference_count}}
+      🗑️ Items deleted: {{deleted_count}}
+      📊 Inbox: {{remaining_count}} items remaining
+      ⏱️ Processing time: {{session_duration}}
+      
+  weekly_review_complete:
+    format: |
+      🔄 Weekly Review Complete - Week {{week}}
+      📥 Inbox: Cleared ({{processed_items}} items)
+      📋 Actions: {{total_actions}} across {{context_count}} contexts
+      📁 Projects: {{active_projects}} active, {{completed_projects}} completed
+      ⏳ Waiting: {{waiting_items}} items tracked
+      🤔 Someday: {{someday_items}} items reviewed
+      💡 Key insight: {{weekly_insight}}
+      🎯 Next week focus: {{next_focus}}
