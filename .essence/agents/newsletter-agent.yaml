@@ -1,0 +1,399 @@
+name: "Newsletter Agent"
+type: agent
+extends: base-command
+dependencies: [context-manager, web-fetch]
+tags: [information, newsletters, research, knowledge]
+version: 1.0
+description: "Specialized newsletter content aggregation and analysis agent"
+argument_hint: "[category filter - optional] [output format - optional]"
+context_required: [knowledge-folder, user-prefs]
+
+purpose: "Intelligent newsletter content aggregation, title extraction, and knowledge synthesis across technology and business domains."
+
+activation:
+  display_on_start: true
+  ascii_art: |
+    ╔══════════════════════════════════════╗
+    ║   ███╗   ██╗███████╗██╗    ██╗███████╗║
+    ║   ████╗  ██║██╔════╝██║    ██║██╔════╝║
+    ║   ██╔██╗ ██║█████╗  ██║ █╗ ██║███████╗║
+    ║   ██║╚██╗██║██╔══╝  ██║███╗██║╚════██║║
+    ║   ██║ ╚████║███████╗╚███╔███╔╝███████║║
+    ║   ╚═╝  ╚═══╝╚══════╝ ╚══╝╚══╝ ╚══════╝║
+    ║           AGENT ACTIVATED            ║
+    ╚══════════════════════════════════════╝
+  greeting: "📰 Newsletter Agent online! Ready to curate the web's finest insights and emerging trends for your knowledge base."
+  tagline: "Your personal intelligence analyst - transforming newsletters into actionable knowledge"
+  activation_sound: "news_chime"
+
+arguments:
+  - name: "category_filter"
+    type: "optional"
+    description: "Filter newsletters by category - supports single or multiple categories"
+    options: ["AI", "Software", "Business", "Creativity", "DevTrends", "all"]
+    examples: ["AI", "Software,Business", "all"]
+    default: "all"
+  
+  - name: "output_format"
+    type: "optional"
+    description: "Output format for the newsletter summary"
+    options: ["intelligence_report", "detailed", "brief", "headlines", "curated"]
+    examples: ["intelligence_report", "detailed", "curated"]
+    default: "intelligence_report"
+
+context_requirements:
+  - "08-Knowledge folder structure for storing summaries"
+  - "User preferences for newsletter sources and topics"
+  - "Current date for file naming and organization"
+  - "Web access for fetching newsletter content"
+
+newsletter_sources:
+  ai_machine_learning:
+    category: "AI"
+    sources:
+      - name: "The Batch (DeepLearning.AI)"
+        url: "https://www.deeplearning.ai/the-batch/"
+        content_selector: ".post-title, .article-title, h2, h3"
+        update_frequency: "weekly"
+        description: "AI news and insights from Andrew Ng's team"
+      
+      - name: "Import AI (by Jack Clark)"
+        url: "https://jack-clark.net/"
+        content_selector: ".post-title, .entry-title"
+        update_frequency: "weekly"
+        description: "AI policy and research developments"
+      
+      - name: "The Sequence"
+        url: "https://thesequence.substack.com/"
+        content_selector: ".post-preview-title, h1, h2"
+        update_frequency: "weekly"
+        description: "Technical AI and ML insights"
+      
+      - name: "Latent Space"
+        url: "https://www.latent.space/"
+        content_selector: ".post-title, article h1, article h2"
+        update_frequency: "irregular"
+        description: "AI engineering and product insights"
+
+  software_development:
+    category: "Software"
+    sources:
+      - name: "InfoQ Software Architects' Newsletter"
+        url: "https://www.infoq.com/software-architects-newsletter/"
+        content_selector: ".news-item h3, .article-title"
+        update_frequency: "weekly"
+        description: "Software architecture trends and practices"
+      
+      - name: "Programming Digest"
+        url: "https://programmingdigest.net/"
+        content_selector: ".digest-item h3, .title"
+        update_frequency: "weekly"
+        description: "Programming tutorials and best practices"
+      
+      - name: "Stack Overflow Newsletter"
+        url: "https://stackoverflow.blog/newsletter/"
+        content_selector: ".post-title, article h2"
+        update_frequency: "weekly"
+        description: "Developer community insights and trends"
+      
+      - name: "Software Lead Weekly"
+        url: "https://softwareleadweekly.com/"
+        content_selector: ".newsletter-item h3, .article-title"
+        update_frequency: "weekly"
+        description: "Engineering leadership and management"
+
+  startup_business:
+    category: "Business"
+    sources:
+      - name: "Stratechery (by Ben Thompson)"
+        url: "https://stratechery.com/"
+        content_selector: ".post-title, h1"
+        update_frequency: "multiple_weekly"
+        description: "Technology business strategy analysis"
+      
+      - name: "Lenny's Newsletter"
+        url: "https://www.lennysnewsletter.com/"
+        content_selector: ".post-preview-title, h1"
+        update_frequency: "weekly"
+        description: "Product management and growth insights"
+      
+      - name: "Founder Weekly"
+        url: "https://founderweekly.com/"
+        content_selector: ".story-title, h3"
+        update_frequency: "weekly"
+        description: "Startup and entrepreneurship resources"
+      
+      - name: "First Round Review"
+        url: "https://review.firstround.com/"
+        content_selector: ".article-title, h1"
+        update_frequency: "irregular"
+        description: "Startup and venture capital insights"
+
+  creativity_design:
+    category: "Creativity"
+    sources:
+      - name: "Dense Discovery"
+        url: "https://www.densediscovery.com/"
+        content_selector: ".newsletter-item h3, .featured-title"
+        update_frequency: "weekly"
+        description: "Design, technology, and culture curation"
+      
+      - name: "Pixel Art Weekly"
+        url: "https://pixelartweekly.bearblog.dev/"
+        content_selector: "article h2, .post-title"
+        update_frequency: "weekly"
+        description: "Pixel art tutorials and showcases"
+      
+      - name: "UX Collective"
+        url: "https://uxdesign.cc/"
+        content_selector: ".post-title, h1"
+        update_frequency: "daily"
+        description: "User experience design insights"
+
+  developer_trends:
+    category: "DevTrends"
+    sources:
+      - name: "GitHub Trending"
+        url: "https://github.com/trending"
+        content_selector: ".repo-list-item h3, .Box-row h3"
+        update_frequency: "daily"
+        description: "Trending repositories and projects"
+      
+      - name: "Hacker News Newsletter"
+        url: "https://www.hackernewsletter.com/"
+        content_selector: ".newsletter-item h3, .story-title"
+        update_frequency: "weekly"
+        description: "Curated tech stories from Hacker News"
+
+content_processing:
+  extraction_patterns:
+    title_extraction:
+      - "h1, h2, h3"
+      - ".post-title, .article-title, .entry-title"
+      - ".story-title, .newsletter-item h3"
+      - ".post-preview-title"
+    
+    content_extraction:
+      - ".post-excerpt, .article-excerpt"
+      - ".story-description, .post-description"
+      - "meta[name='description']"
+    
+    date_extraction:
+      - ".post-date, .publish-date"
+      - "time[datetime]"
+      - ".date, .timestamp"
+  
+  content_filtering:
+    min_title_length: 10
+    max_title_length: 200
+    exclude_patterns:
+      - "^Advertisement"
+      - "^Sponsored"
+      - "^Job:"
+      - "^Hiring:"
+    
+    include_patterns:
+      - "Tutorial"
+      - "Guide"
+      - "How to"
+      - "Best practices"
+      - "Trends"
+      - "Analysis"
+      - "Review"
+      - "Introduction"
+  
+  quality_scoring:
+    factors:
+      - "Title relevance to category"
+      - "Content depth indicators"
+      - "Source authority"
+      - "Engagement metrics"
+    
+    minimum_score: 6.0
+    scoring_weights:
+      relevance: 0.4
+      depth: 0.3
+      authority: 0.2
+      engagement: 0.1
+
+knowledge_organization:
+  base_folder: "08-Knowledge/Newsletters"
+  folder_structure:
+    summaries: "Summaries"
+    archives: "Archives"
+    curated: "Curated"
+    categories: "Categories"
+  
+  file_naming:
+    intelligence_report: "Newsletter-Intelligence-Report-{{YYYY-MM-DD}}.md"
+    daily_summary: "Newsletter-Summary-{{YYYY-MM-DD}}.md"
+    category_summary: "{{Category}}-Newsletter-{{YYYY-MM-DD}}.md"
+    weekly_digest: "Weekly-Newsletter-Digest-{{YYYY-Www}}.md"
+    curated_collection: "{{Topic}}-Curated-{{YYYY-MM}}.md"
+  
+  templates:
+    newsletter_intelligence_report:
+      template_source: "Templates/newsletter_template.md"
+      template_variables:
+        date: "{{current_date}}"
+        timestamp: "{{current_timestamp}}"
+        edition_number: "{{edition_number}}"
+        sources_count: "{{sources_processed}}"
+        articles_count: "{{articles_analyzed}}"
+        categories_count: "{{active_categories}}"
+        knowledge_score: "{{calculated_knowledge_score}}"
+        top_insights: "{{extracted_insights}}"
+        category_performance: "{{category_metrics}}"
+        trending_topics: "{{trending_analysis}}"
+        priority_articles: "{{high_value_articles}}"
+      auto_create: true
+      output_format: "intelligence_report"
+    
+    daily_summary: |
+      # Newsletter Summary - {{date}}
+      
+      Generated by Newsletter Agent at {{timestamp}}
+      
+      ## 📊 Summary Statistics
+      - **Sources Processed:** {{sources_count}}
+      - **Articles Analyzed:** {{articles_count}}
+      - **Categories Covered:** {{categories}}
+      - **Top Keywords:** {{top_keywords}}
+      
+      ---
+      
+      {{#each categories}}
+      ## {{emoji}} {{category_name}}
+      
+      {{#each articles}}
+      ### {{title}}
+      **Source:** {{source}} | **Date:** {{date}} | **Score:** {{quality_score}}
+      
+      {{summary}}
+      
+      **Key Insights:**
+      {{#each insights}}
+      - {{this}}
+      {{/each}}
+      
+      **Tags:** {{tags}}
+      **Link:** [Read More]({{url}})
+      
+      ---
+      {{/each}}
+      {{/each}}
+      
+      ## 🔍 Trending Topics
+      {{#each trending_topics}}
+      - **{{topic}}** ({{frequency}} mentions)
+      {{/each}}
+      
+      ## 💡 Key Takeaways
+      {{#each takeaways}}
+      - {{this}}
+      {{/each}}
+      
+      ## 🔗 Related Knowledge
+      {{#each related_links}}
+      - [[{{this}}]]
+      {{/each}}
+
+output_formats:
+  intelligence_report:
+    template_source: "Templates/newsletter_template.md"
+    include_executive_dashboard: true
+    include_performance_matrix: true
+    include_trending_heatmap: true
+    include_priority_articles: true
+    include_strategic_takeaways: true
+    include_analytics: true
+    quality_threshold: 8.0
+    description: "High-value intelligence report format with visual tables and strategic insights"
+  
+  detailed:
+    include_summaries: true
+    include_insights: true
+    include_links: true
+    include_tags: true
+    include_quality_scores: true
+  
+  brief:
+    include_summaries: false
+    include_insights: true
+    include_links: true
+    include_tags: false
+    include_quality_scores: false
+  
+  headlines:
+    include_summaries: false
+    include_insights: false
+    include_links: true
+    include_tags: false
+    include_quality_scores: false
+  
+  curated:
+    include_summaries: true
+    include_insights: true
+    include_links: true
+    include_tags: true
+    include_quality_scores: true
+    quality_threshold: 8.0
+
+integration_patterns:
+  knowledge_agent:
+    - "Cross-reference newsletter content with existing knowledge base"
+    - "Create connections between newsletter topics and stored knowledge"
+    - "Update knowledge graph with new concepts and trends"
+  
+  task_agent:
+    - "Create tasks for following up on interesting articles"
+    - "Set reminders for newsletter publication schedules"
+    - "Track reading progress and completion"
+  
+  review_agent:
+    - "Include newsletter insights in weekly reviews"
+    - "Track emerging trends across time periods"
+    - "Analyze knowledge acquisition patterns"
+
+automation_settings:
+  auto_fetch_schedule:
+    daily: ["GitHub Trending", "UX Collective"]
+    weekly: ["Most newsletters"]
+    bi_weekly: ["First Round Review"]
+  
+  auto_categorization: true
+  auto_tagging: true
+  auto_linking: true
+  auto_summary_generation: true
+  
+  notification_settings:
+    new_summaries: true
+    trending_topics: true
+    high_quality_articles: true
+
+error_handling:
+  fetch_failures:
+    retry_attempts: 3
+    retry_delay: 5000 # milliseconds
+    fallback_behavior: "log_and_continue"
+  
+  parsing_failures:
+    skip_malformed_content: true
+    log_parsing_errors: true
+    notify_user: false
+  
+  storage_failures:
+    backup_to_temp: true
+    retry_storage: true
+    notify_user: true
+
+performance_optimization:
+  concurrent_fetching: true
+  max_concurrent_requests: 5
+  request_delay: 1000 # milliseconds
+  cache_duration: 3600 # 1 hour
+  
+  content_limits:
+    max_articles_per_source: 20
+    max_sources_per_category: 10
+    max_processing_time: 300000 # 5 minutes

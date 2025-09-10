@@ -4,11 +4,29 @@
 
 case "$1" in
   create)
+    # Check if list exists, create if not
+    LIST_NAME="${3:-Reminders}"
+    
+    # Check if list exists and create if needed
+    LIST_EXISTS=$(osascript -e "tell application \"Reminders\"
+      try
+        set myList to list \"$LIST_NAME\"
+        return \"exists\"
+      on error
+        return \"missing\"
+      end try
+    end tell")
+    
+    if [ "$LIST_EXISTS" = "missing" ]; then
+      echo "📝 Creating new list: $LIST_NAME"
+      osascript -e "tell application \"Reminders\" to make new list with properties {name:\"$LIST_NAME\"}"
+    fi
+    
     # Create new reminder
     if [ -z "$4" ]; then
       # No due date specified
       osascript -e "tell application \"Reminders\"
-        set myList to list \"${3:-Reminders}\"
+        set myList to list \"$LIST_NAME\"
         tell myList
           make new reminder with properties {name:\"$2\"}
         end tell
@@ -17,10 +35,10 @@ case "$1" in
       # With due date - convert common terms to proper format
       case "$4" in
         "today")
-          DUE_DATE="$(date '+%m/%d/%Y')"
+          DUE_DATE="$(date '+%b %d, %Y')"
           ;;
         "tomorrow")
-          DUE_DATE="$(date -v +1d '+%m/%d/%Y')"
+          DUE_DATE="$(date -v +1d '+%b %d, %Y')"
           ;;
         *)
           DUE_DATE="$4"
@@ -28,13 +46,13 @@ case "$1" in
       esac
       
       osascript -e "tell application \"Reminders\"
-        set myList to list \"${3:-Reminders}\"
+        set myList to list \"$LIST_NAME\"
         tell myList
           make new reminder with properties {name:\"$2\", due date:date \"$DUE_DATE\"}
         end tell
       end tell"
     fi
-    echo "✅ Reminder '$2' added to ${3:-Reminders}"
+    echo "✅ Reminder '$2' added to $LIST_NAME"
     ;;
     
   list)

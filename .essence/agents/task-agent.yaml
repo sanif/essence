@@ -5,7 +5,7 @@ dependencies: [context-manager, reminder.sh]
 tags: [productivity, tasks, gtd]
 version: 1.0
 description: "Specialized task management agent"
-argument_hint: "[task description] [due date/time] [reminder?]"
+argument_hint: "[task(s) description - supports multiple tasks] [due date/time] [reminder?]"
 context_required: [daily-note, user-prefs]
 
 purpose: "Intelligent task creation, management, and tracking with Mac Reminders integration."
@@ -29,7 +29,18 @@ activation:
 arguments:
   - name: "task_description"
     type: "required"
-    description: "The task to create or manage"
+    description: "Single task or multiple tasks to create. Supports natural language input with automatic task identification"
+    parsing_modes:
+      - "single_task": "Single task description"
+      - "multiple_explicit": "Tasks separated by delimiters (commas, 'and', line breaks)"
+      - "multiple_implicit": "Paragraph/sentence containing multiple implied tasks"
+    task_identifiers:
+      - "Numbered lists (1., 2., 3.)"
+      - "Bullet points (-, *, •)"
+      - "Action verbs (do, call, send, write, review, etc.)"
+      - "Conjunction separators (and, then, also, plus)"
+      - "Comma-separated items"
+      - "Line breaks between tasks"
   
   - name: "due_date"
     type: "optional"
@@ -48,18 +59,159 @@ context_requirements:
   - "Existing task list for conflict detection"
 
 core_capabilities:
+  people_management:
+    person_detection:
+      patterns:
+        - "with {{person}}"
+        - "call {{person}}"
+        - "email {{person}}"
+        - "meet {{person}}"
+        - "discuss with {{person}}"
+        - "followup with {{person}}"
+        - "{{person}} and {{person2}}"
+      
+      extraction_rules:
+        - "Extract names from prepositions (with, to, from)"
+        - "Identify names after action verbs (call, email, meet)"
+        - "Handle multiple people in single task"
+        - "Normalize name capitalization"
+    
+    person_file_management:
+      folder_path: "04-People"
+      file_naming: "{{FirstName}} {{LastName}}.md"
+      file_creation:
+        template_source: "Templates/people_template.md"
+        template_variables:
+          title: "{{person_name}}"
+          date: "{{current_date}}"
+        auto_create: true
+        check_existing: "Search for existing person files before creating new ones"
+      
+      person_linking:
+        format: "[[{{person_name}}]]"
+        task_integration: "Automatically link people mentioned in tasks"
+        bidirectional: "Create backlinks from person files to tasks"
+
+  meeting_management:
+    meeting_detection:
+      keywords: ["meeting", "standup", "call", "session", "demo", "presentation", "review", "sync"]
+      patterns:
+        - "meeting with {{people}}"
+        - "{{meeting_type}} with {{people}}"
+        - "{{people}} meeting"
+        - "call with {{people}}"
+        - "standup with {{people}}"
+      
+      meeting_extraction:
+        - "Identify meeting type and participants"
+        - "Extract date/time information"
+        - "Determine meeting purpose from context"
+    
+    meeting_file_management:
+      folder_path: "05-Meetings"
+      file_naming: "{{meeting_title}} {{date}}.md"
+      file_creation:
+        template_source: "Templates/meeting_template.md"
+        template_variables:
+          title: "{{meeting_title}}"
+          date: "{{meeting_date}}"
+          attendees: "{{attendees_list}}"
+        auto_create: true
+        link_to_people: "Automatically link to all attendee person files"
+      
+      meeting_linking:
+        format: "[[{{meeting_title}} {{date}}]]"
+        task_integration: "Link meeting-related tasks to meeting notes"
+        calendar_integration: "Include meeting times and attendees"
+
+  multi_task_parsing:
+    detection_patterns:
+      numbered_lists: 
+        - "1\\. .+, 2\\. .+, 3\\. .+"
+        - "\\d+\\. .+"
+      bullet_points:
+        - "[-*•] .+"
+        - "- .+ - .+ - .+"
+      conjunctions:
+        - ".+ and .+"
+        - ".+ then .+"
+        - ".+ also .+"
+        - ".+ plus .+"
+      comma_separated:
+        - ".+, .+, .+"
+        - ".+,.+,.+"
+      action_verbs:
+        - "(?:call|email|write|send|review|finish|complete|buy|schedule|plan|organize|prepare).+"
+      line_breaks:
+        - "multiline input with task-like sentences"
+    
+    parsing_algorithm:
+      step_1: "Identify parsing mode based on input pattern"
+      step_2: "Extract individual tasks using appropriate delimiter"
+      step_3: "Clean and normalize each task description" 
+      step_4: "Apply consistent formatting and metadata"
+      step_5: "Create tasks individually with shared attributes"
+    
+    task_extraction:
+      min_task_length: 3
+      max_tasks_per_input: 20
+      fallback_behavior: "If parsing fails, treat entire input as single task"
+      validation: "Ensure each extracted task has actionable verb or clear intent"
+    
+    supported_formats:
+      numbered_list_examples:
+        - "1. Call the dentist, 2. Buy groceries, 3. Finish report"
+        - "1. Review document\n2. Send email\n3. Update calendar"
+      
+      bullet_point_examples:
+        - "- Call John - Send email - Review code"
+        - "• Buy milk • Pick up dry cleaning • Pay bills"
+      
+      conjunction_examples:
+        - "Call mom and send birthday card and book restaurant"
+        - "Review notes then prepare presentation then practice speech"
+      
+      comma_separated_examples:
+        - "Buy groceries, walk the dog, call dentist, finish homework"
+        - "Email team,schedule meeting,review budget,update docs"
+      
+      action_verb_examples:
+        - "Call the client about the proposal. Email the team the updated schedule. Review the budget for next quarter."
+        - "Schedule dentist appointment, prepare for meeting, organize desk"
+      
+      mixed_format_examples:
+        - "Need to: 1) call dentist, 2) buy groceries, and also finish the report"
+        - "Today: email team, then call client, plus review documents"
+
   task_creation:
     formats:
-      markdown_checklist: "- [ ] {{task}} #task {{tags}}"
-      obsidian_task: "- [ ] {{task}} 📅 {{due_date}} ⏰ {{reminder}} {{tags}}"
+      markdown_checklist: "- [ ] {{task}} #task {{people_links}} {{meeting_links}} {{tags}}"
+      obsidian_task: "- [ ] **{{task}}** #task 📅 {{due_date}} ⏰ {{reminder}} {{people_links}} {{meeting_links}} {{tags}}"
       detailed_task: |
-        ## 📋 {{task}}
+        ## 📋 {{task}} #task
         - **Due:** {{due_date}}
         - **Priority:** {{priority}}
+        - **People:** {{people_links}}
+        - **Meeting:** {{meeting_links}}
         - **Project:** {{project}}
         - **Context:** {{context}}
         - **Estimated Time:** {{time_estimate}}
         {{task_notes}}
+    
+    automatic_linking:
+      people_linking:
+        - "Detect people names in task descriptions"
+        - "Check if person file exists in 04-People folder"
+        - "Create person file if not exists using template"
+        - "Link to person using [[Person Name]] format"
+        - "Support multiple people per task"
+      
+      meeting_linking:
+        - "Detect meeting-related keywords and people"
+        - "Generate meeting title from context"
+        - "Create meeting file in 05-Meetings folder if not exists"
+        - "Link to meeting using [[Meeting Title Date]] format"
+        - "Auto-populate meeting attendees from task people"
     
     priority_systems:
       eisenhower_matrix:
@@ -80,12 +232,30 @@ core_capabilities:
   mac_reminders_integration:
     script_path: "./scripts/reminder.sh"
     default_list: "Life OS"
-    supported_lists: ["Work", "Personal", "Shopping", "Someday"]
+    auto_create_lists: true
+    supported_lists: ["Life OS", "Work", "Personal", "Shopping", "Projects", "Someday"]
     
     reminder_creation:
-      syntax: "./scripts/reminder.sh '{{task}}' '{{list}}' '{{due_date}}'"
-      error_handling: "Log to daily note if script fails"
-      verification: "Check reminder creation success"
+      syntax: "./scripts/reminder.sh create '{{task}}' '{{list}}' '{{due_date}}'"
+      auto_list_creation: "Script automatically creates missing lists using AppleScript"
+      date_format_requirements:
+        - "Use DD/MM/YYYY HH:MM AM/PM format for timed reminders (Day/Month/Year)"
+        - "Examples: '10/9/2025 02:15 PM' (10th Sep), '11/9/2025 09:30 AM' (11th Sep)"
+        - "For date-only: use DD/MM/YYYY format"
+        - "WORKING FORMAT: '10/9/2025 6:00 PM' - DD/MM/YYYY with single digit month"
+        - "Simple formats like 'today 12:15pm' cause parsing errors"
+        - "CRITICAL: Avoid MM/DD/YYYY as it causes date confusion (09/10 = Oct 9 instead of Sep 10)"
+        - "Note: Full month names like 'September 10, 2025' do NOT work in AppleScript"
+      error_handling: "Log to daily note if script fails, auto-create missing lists"
+      verification: "Check reminder creation success, lists created automatically if missing"
+      list_management:
+        creation_behavior: "Any list name provided will be auto-created if it doesn't exist"
+        recommended_lists: 
+          - "Life OS: Default list for personal productivity tasks"
+          - "Work: Professional and work-related tasks"
+          - "Projects: Project-specific reminders and deadlines"
+          - "Shopping: Shopping lists and errands"
+          - "Someday: Future ideas and long-term goals"
 
   task_management:
     task_tracking:
@@ -108,13 +278,15 @@ core_capabilities:
 
 task_templates:
   simple_task:
-    format: "- [ ] {{task}} {{due_date}} {{tags}}"
+    format: "- [ ] {{task}} #task {{people_links}} {{meeting_links}} {{due_date}} {{tags}}"
     
   detailed_task:
     format: |
-      - [ ] **{{task}}**
+      - [ ] **{{task}}** #task
         - **Due:** {{due_date}}
         - **Priority:** {{priority}}
+        - **People:** {{people_links}}
+        - **Meeting:** {{meeting_links}}
         - **Estimate:** {{time_estimate}}
         - **Project:** #project/{{project}}
         - **Context:** {{context}}
@@ -122,10 +294,14 @@ task_templates:
         
   recurring_task:
     format: |
-      - [ ] {{task}} (Recurring {{frequency}})
+      - [ ] {{task}} (Recurring {{frequency}}) {{people_links}}
         - **Next Due:** {{next_due}}
         - **Last Completed:** {{last_completed}}
         - **Streak:** {{completion_streak}}
+        - **People:** {{people_links}}
+  
+  meeting_task:
+    format: "- [ ] **{{task}}** with {{people_links}} [[{{meeting_file}}]] #task #meeting 📅 {{due_date}} ⏰ {{reminder}} {{tags}}"
 
 task_contexts:
   gtd_contexts:
@@ -189,9 +365,42 @@ output_formats:
     format: |
       ✅ Task created: {{task}}
       📅 Due: {{due_date}}
+      👥 People: {{people_linked}}
+      📊 Meeting: {{meeting_linked}}
       ⏰ Reminder: {{reminder_status}}
       📋 Added to: {{location}}
       🏷️ Tags: {{tags}}
+  
+  multiple_tasks_created:
+    format: |
+      🎯 Multiple tasks created from input: "{{original_input}}"
+      
+      📝 Identified {{task_count}} tasks:
+      {{#each tasks}}
+      {{@index}}. ✅ {{this.task}}
+         📅 Due: {{this.due_date}}
+         👥 People: {{this.people_linked}}
+         📊 Meeting: {{this.meeting_linked}}
+         ⏰ Reminder: {{this.reminder_status}}
+         🏷️ Tags: {{this.tags}}
+      {{/each}}
+      
+      📋 All tasks added to: {{location}}
+      👥 People files created/linked: {{people_files_created}}
+      📊 Meeting files created/linked: {{meeting_files_created}}
+      🧠 Parsing method: {{parsing_method}}
+  
+  parsing_summary:
+    format: |
+      🔍 Task Parsing Results
+      📝 Input: "{{original_input}}"
+      🎯 Detected format: {{detected_format}}
+      📊 Tasks found: {{task_count}}
+      ⚡ Processing time: {{processing_time}}ms
+      
+      {{#if parsing_issues}}
+      ⚠️  Issues: {{parsing_issues}}
+      {{/if}}
       
   task_completed:
     format: |
